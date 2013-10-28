@@ -3,22 +3,27 @@ package eventBarrier;
 import api.AbstractEventBarrier;
 
 public class EventBarrier extends AbstractEventBarrier implements Runnable{
-
+    static final String GATEKEEPER = "Gate Keeper";
+    private int numPassengers = 0;
+    private boolean bridgeIsLowered = false;
+    
     @Override
     public void arrive () {
-        // TODO Auto-generated method stub
+        while (!bridgeIsLowered) {
+            Thread.currentThread()
+        }
         
     }
 
     @Override
     public void raise () {
-        // TODO Auto-generated method stub
+        this.notifyAll();
         
     }
 
     @Override
     public void complete () {
-        // TODO Auto-generated method stub
+        
         
     }
 
@@ -30,13 +35,20 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable{
 
     @Override
     public void run () {
-        // TODO Auto-generated method stub
-        
+        if(Thread.currentThread().getName().equals(GATEKEEPER)) {
+            raise();
+        }
+        else {
+            arrive();
+
+        }
     }
     
     public static void main(String args[]) {
         EventBarrier barrier = new EventBarrier();
-        Thread thread1 = new Thread(barrier, "Test 1");
+        Thread passenger1 = new Thread(barrier, "Passenger 1");
+        Thread gateKeeper = new Thread(barrier, GATEKEEPER);
+        
     }
     
 }
