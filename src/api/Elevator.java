@@ -52,9 +52,10 @@ public class Elevator extends AbstractElevator implements Runnable {
             if (floorsToVisit[currentFloor] != 0) {
                 OpenDoors();
                 ClosedDoors();
-                //TODO Make a stop
             }
         }
+        
+        isAscending = !isAscending;
 
     }
 
