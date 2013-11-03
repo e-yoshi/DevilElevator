@@ -48,6 +48,8 @@ public class Elevator extends AbstractElevator implements Runnable {
             }
             
             if (floorsToVisit[currentFloor] != 0) {
+                OpenDoors();
+                ClosedDoors();
                 //TODO Make a stop
             }
         }
@@ -62,13 +64,15 @@ public class Elevator extends AbstractElevator implements Runnable {
 
     @Override
     public void Exit () {
-        // TODO Auto-generated method stub
+        passengersRiding--;
+        //No error check yet in case this is 0 already
+        floorsToVisit[currentFloor]--;
 
     }
 
     @Override
     public void RequestFloor (int floor) {
-        // TODO Auto-generated method stub
+        floorsToVisit[floor]++;
 
     }
     
