@@ -9,28 +9,39 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable{
     
     @Override
     public void arrive () {
+        numPassengers++;
+        
         while (!bridgeIsLowered) {
-            Thread.currentThread()
+            try {
+                Thread.currentThread().wait();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         
     }
 
     @Override
     public void raise () {
+        bridgeIsLowered = true;
         this.notifyAll();
+        
+        while(numPassengers > 0) {
+            
+        }
         
     }
 
     @Override
     public void complete () {
-        
+        numPassengers--;
         
     }
 
     @Override
     public int waiters () {
-        // TODO Auto-generated method stub
-        return 0;
+        return numPassengers;
     }
 
     @Override
@@ -40,14 +51,21 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable{
         }
         else {
             arrive();
-
+            crossBridge();
+            complete();
         }
+    }
+    
+    public void crossBridge() {
+        Thread.sleep(1000);
     }
     
     public static void main(String args[]) {
         EventBarrier barrier = new EventBarrier();
         Thread passenger1 = new Thread(barrier, "Passenger 1");
         Thread gateKeeper = new Thread(barrier, GATEKEEPER);
+        
+        passenger1.start();
         
     }
     
