@@ -17,14 +17,33 @@ public class Building extends AbstractBuilding implements Runnable {
 
     @Override
     public AbstractElevator CallUp (int fromFloor) {
-        if (elevator.)
+        
+        elevator.callToFloor(fromFloor);
+        return elevator;
+        
+        //This if statement will be useful for multiple elevators
+        //Since we only have one, we return the only one
+        /*
+        if (elevator.isAscending() && elevator.getCurrentFloor() <= fromFloor) {
+            
+        }
         return null;
+        */
     }
 
     @Override
     public AbstractElevator CallDown (int fromFloor) {
-        // TODO Auto-generated method stub
+        elevator.callToFloor(fromFloor);
+        return elevator;
+        
+        //This if statement will be useful for multiple elevators
+        //Since we only have one, we return the only one
+        /*
+        if (!elevator.isAscending() && elevator.getCurrentFloor() >= fromFloor) {
+            
+        }
         return null;
+        */
     }
 
 }
