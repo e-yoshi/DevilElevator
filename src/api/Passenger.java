@@ -27,6 +27,19 @@ public class Passenger implements Runnable {
         else {
             elevator = building.CallUp(fromFloor);
         }
+        //Synchronize?
+        elevator.Enter();
+        elevator.RequestFloor(destinationFloor);
+        while (elevator.getCurrentFloor() != destinationFloor) {
+            try {
+                elevator.wait();
+            }
+            catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        elevator.Exit();
 
     }
 

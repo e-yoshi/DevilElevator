@@ -4,7 +4,6 @@ public class Elevator extends AbstractElevator implements Runnable {
 
     private int passengersRiding = 0;
     private int[] floorsToVisit;
-    private int currentFloor = 1;
     private boolean isAscending = true;
     
     public Elevator (int numFloors, int elevatorId, int maxOccupancyThreshold) {
@@ -27,7 +26,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 
     @Override
     public void OpenDoors () {
-        // TODO Auto-generated method stub
+        //Synchronize?
+        while (floorsToVisit[currentFloor] != 0) {
+            notifyAll();
+        }
 
     }
 
@@ -78,10 +80,6 @@ public class Elevator extends AbstractElevator implements Runnable {
     
     public boolean isAscending() {
         return isAscending;
-    }
-    
-    public int getCurrentFloor() {
-        return currentFloor;
     }
     
     public void callToFloor(int floor) {

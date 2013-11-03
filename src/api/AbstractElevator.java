@@ -5,6 +5,7 @@ public abstract class AbstractElevator {
 	protected int numFloors; 
 	protected int elevatorId;
 	protected int maxOccupancyThreshold;
+	protected int currentFloor = 1;
 
 	/**
 	 * Other variables/data structures as needed goes here 
@@ -46,5 +47,7 @@ public abstract class AbstractElevator {
 	/* Request a destination floor once you enter */
  	public abstract void RequestFloor(int floor);	
 	
-	/* Other methods as needed goes here */
+ 	public int getCurrentFloor() {
+ 	        return currentFloor;
+ 	    }
 }
