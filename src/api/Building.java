@@ -1,10 +1,12 @@
 package api;
 
 public class Building extends AbstractBuilding implements Runnable {
-
+    private Elevator elevator;
+    
+    
     public Building (int numFloors, int numElevators) {
         super(numFloors, numElevators);
-
+        elevator = new Elevator(numFloors, 0, 0);
     }
 
     @Override
@@ -15,7 +17,7 @@ public class Building extends AbstractBuilding implements Runnable {
 
     @Override
     public AbstractElevator CallUp (int fromFloor) {
-        // TODO Auto-generated method stub
+        if (elevator.)
         return null;
     }
 

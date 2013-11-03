@@ -75,5 +75,13 @@ public class Elevator extends AbstractElevator implements Runnable {
     public boolean isAscending() {
         return isAscending;
     }
+    
+    public int getCurrentFloor() {
+        return currentFloor;
+    }
+    
+    public void callToFloor(int floor) {
+        floorsToVisit[floor]++;
+    }
 
 }
