@@ -57,7 +57,7 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable{
     }
     
     public void crossBridge() {
-        Thread.sleep(1000);
+
     }
     
     public static void main(String args[]) {
