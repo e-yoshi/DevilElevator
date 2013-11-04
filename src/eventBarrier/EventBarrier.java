@@ -16,14 +16,14 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 			updateCrossing(true);
 			return;
 		} else {
+			updateCrossing(true);
 			notifyAll();
 			while (!openedBarrier) {
-				updateCrossing(true);
 				try {
 					wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					continue;
+					
 				}
 			}
 		}
@@ -32,33 +32,36 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	@Override
 	public synchronized void raise() {
 		if (openedBarrier && numCrossing == 0) {
-			openedBarrier = false;
+			operateBarrier(false);
 			System.out.println("Closing Barrier!");
 			return;
 		}
+		
+		if(total==numFinished)
+			return;
 
 		while (numCrossing == 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// e.printStackTrace();
+				e.printStackTrace();
 				continue;
 			}
 		}
 		
-		openedBarrier = true;
+		operateBarrier(true);
 		System.out.println("Opening Barrier!");
 		notifyAll();
 		while (numCrossing > 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// e.printStackTrace();
+				e.printStackTrace();
 				continue;
 			}
 		}
 		System.out.println("Closing Barrier!");
-		openedBarrier = false;
+		operateBarrier(false);
 
 	}
 
@@ -66,6 +69,7 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	public synchronized void complete() {
 		updateCrossing(false);
 		updateFinished(true);
+		//System.out.println("numFinished = " + numFinished + " numCrossing = "+ numCrossing);
 		if (numCrossing == 0) {
 			notifyAll();
 		}
@@ -116,4 +120,14 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 		this.total = total;
 	}
 
+	private void operateBarrier(boolean open) {
+		try {
+			Thread.sleep(raiseTime);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		openedBarrier = open;
+
+	}
 }
