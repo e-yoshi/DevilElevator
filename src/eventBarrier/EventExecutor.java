@@ -11,7 +11,6 @@ public class EventExecutor {
     private static List<Thread> threadList = new ArrayList<Thread>();
     private static List<Integer> waveList = new ArrayList<Integer>();
     private static List<Integer> waveInterval = new ArrayList<Integer>();
-    private static int raiseTime = 0;
 
     public EventExecutor(){
     	barrier = new EventBarrier();
@@ -19,9 +18,8 @@ public class EventExecutor {
         factory = new EventFactory(filename, barrier);
         threadList = factory.getThreadList();
         waveList = factory.getWaveList();  
-        raiseTime = factory.getRaiseTime();
         waveInterval = factory.getWaveInterval();
-        barrier.setRaiseTime(raiseTime);
+        barrier.setRaiseTime(factory.getRaiseTime());
         execute();
     }
 

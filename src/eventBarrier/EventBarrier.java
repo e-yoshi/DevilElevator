@@ -24,14 +24,10 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 				}
 			}
 		}
-
-		
-
 	}
 
 	@Override
 	public synchronized void raise() {
-
 		if (bridgeIsLowered) {
 			return;
 		}
