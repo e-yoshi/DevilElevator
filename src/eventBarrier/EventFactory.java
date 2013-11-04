@@ -20,7 +20,7 @@ public class EventFactory implements ThreadFactory {
     private List<Integer> waveList = new ArrayList<Integer>();
     private List<Integer> waveInterval = new ArrayList<Integer>();
 
-    private long raiseTime = 0;
+    private int raiseTime = 0;
     private Random rgen = new Random();
     
     public EventFactory(String fileName) {
@@ -45,23 +45,34 @@ public class EventFactory implements ThreadFactory {
             while ((line = br.readLine())!=null){
                 String[] params = line.split(SPLIT_AT); 
                 boolean crossRand = false;
-                int crossTime = 0;
-                if(params[0].equals("raiseTime")) 
+                int crossTimeRange = 0;
+                
+                if(params[0].startsWith("//"))
+                    continue;
+                else if(params[0].equals("raiseTime")) 
                     raiseTime = Integer.parseInt(params[1]);
                 else if(params[0].equals("random?")) {
-                    if(crossRand = Boolean.parseBoolean(params[1])) {
-                        crossTime = rgen.nextInt(Integer.parseInt(params[2]));                       
-                    }
+                    crossRand = Boolean.parseBoolean(params[1]);
+                    crossTimeRange = Integer.parseInt(params[2]);                       
                 } else if (params[0].equals("waveSize")) {
                     int waveSize = Integer.parseInt(params[1]);
                     waveList.add(waveSize);
+                    if(crossRand){
+                        for(int i=0; i<waveSize; i++){
+                            Minstrel m = new Minstrel();
+                            m.setCrossTime(rgen.nextInt(crossTimeRange));
+                            threadList.add(newThread(m));
+                        }
+                    }
                 } else if (params[0].equals("waveInterval")) {
                     int waveSize = Integer.parseInt(params[1]);
                     waveInterval.add(waveSize);
                 } else if (params[0].equals("minstrel")){
-                    Minstrel m = new Minstrel();
-                    m.setCrossTime(Integer.parseInt(params[1]));
-                    threadList.add(newThread(m));
+                    if(!crossRand){
+                        Minstrel m = new Minstrel();
+                        m.setCrossTime(Integer.parseInt(params[1]));
+                        threadList.add(newThread(m));
+                    }
                 }                
             }
         }
@@ -87,7 +98,7 @@ public class EventFactory implements ThreadFactory {
         return waveList;
     }
 
-    public long getRaiseTime () {
+    public int getRaiseTime () {
         return raiseTime;
     }
 

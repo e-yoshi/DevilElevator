@@ -12,8 +12,7 @@ public class EventExecutor {
     private static List<Thread> threadList = new ArrayList<Thread>();
     private static List<Integer> waveList = new ArrayList<Integer>();
     private static List<Integer> waveInterval = new ArrayList<Integer>();
-    private static GateKeeper gateKeeper = new GateKeeper();
-    private static long raiseTime = 0;
+    private static int raiseTime = 0;
 
     public EventExecutor(){
         factory = new EventFactory(filename);
@@ -25,8 +24,6 @@ public class EventExecutor {
     }
 
     private static void execute() {
-        Thread gateKeeperThread = new Thread(gateKeeper);
-        gateKeeperThread.start();
         int accumulator = 0;
         int arrayPos = 0;
         for(int i: waveList){

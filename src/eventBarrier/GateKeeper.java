@@ -6,7 +6,7 @@ public class GateKeeper implements Runnable{
     @Override
     public void run () {
         // TODO Auto-generated method stub
-        
+        System.out.println("Gatekeeper started!");
     }
     public int getRaiseTime () {
         return raiseTime;
