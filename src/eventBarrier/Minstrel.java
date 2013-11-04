@@ -11,7 +11,17 @@ public class Minstrel implements Runnable{
     @Override
     public void run() {
         // TODO Auto-generated method stub
-        System.out.println("Minstrel "+id+" started!");
+        System.out.println("Minstrel "+id+" arrived!");
+        barrier.arrive();
+        System.out.println("Minstrel "+id+" woke up! Crossing barrier for "+ crossTime + "ms!");
+        try {
+			Thread.sleep(crossTime);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.out.println("Minstrel "+id+" finished crossing! Completed!");
+        barrier.complete();
     }
 
 
