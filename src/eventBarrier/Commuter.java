@@ -17,16 +17,16 @@ public class Commuter extends Thread{
     @Override
     public void run() {
         // TODO Auto-generated method stub
-        System.out.println("Minstrel "+name+" arrived!"+barrier);
+        System.out.println("Commuter "+name+" arrived!"+barrier);
         barrier.arrive();
-        System.out.println("Minstrel "+name+" woke up! Crossing barrier for "+ crossTime + "ms!");
+        System.out.println("Commuter "+name+" woke up! Crossing barrier for "+ crossTime + "ms!");
         try {
 			Thread.sleep(crossTime);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        System.out.println("Minstrel "+name+" finished crossing! Completed!");
+        System.out.println("Commuter "+name+" finished crossing! Completed!");
         barrier.complete();
     }
 
