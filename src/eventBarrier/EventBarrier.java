@@ -7,45 +7,59 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	static final String GATEKEEPER = "Gate Keeper";
 	private volatile int numFinished = 0;
 	private volatile int numCrossing = 0;
-	private volatile boolean bridgeIsLowered = false;
+	private volatile boolean openedBarrier = false;
 	private int total = 0;
-
-	
 
 	@Override
 	public synchronized void arrive() {
-		if (bridgeIsLowered) {
+		if (openedBarrier) {
 			updateCrossing(true);
 			return;
 		} else {
-			while (!bridgeIsLowered) {
+			notifyAll();
+			while (!openedBarrier) {
+				updateCrossing(true);
 				try {
 					wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+					continue;
 				}
 			}
-			updateCrossing(true);
 		}
 	}
 
 	@Override
 	public synchronized void raise() {
-		if (bridgeIsLowered) {
+		if (openedBarrier && numCrossing == 0) {
+			openedBarrier = false;
+			System.out.println("Closing Barrier!");
 			return;
 		}
 
-		bridgeIsLowered = true;
+		while (numCrossing == 0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// e.printStackTrace();
+				continue;
+			}
+		}
+		
+		openedBarrier = true;
+		System.out.println("Opening Barrier!");
 		notifyAll();
 		while (numCrossing > 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 				continue;
 			}
 		}
-		//bridgeIsLowered = false;
+		System.out.println("Closing Barrier!");
+		openedBarrier = false;
+
 	}
 
 	@Override
@@ -64,27 +78,28 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 
 	@Override
 	public void run() {
-		while(total > numFinished) {
+		while (total > numFinished) {
 			raise();
 		}
+		System.out.println("All commuters crossed the EventBarrier!");
 	}
-	
+
 	public synchronized void updateCrossing(boolean increment) {
-		if (increment)	{
-			numCrossing ++;
+		if (increment) {
+			numCrossing++;
 		} else {
-			numCrossing --;
+			numCrossing--;
 		}
 	}
-	
+
 	public synchronized void updateFinished(boolean increment) {
-		if (increment)	{
-			numFinished ++;
+		if (increment) {
+			numFinished++;
 		} else {
-			numFinished --;
+			numFinished--;
 		}
 	}
-	
+
 	public int getRaiseTime() {
 		return raiseTime;
 	}
@@ -100,6 +115,5 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	public void setTotal(int total) {
 		this.total = total;
 	}
-
 
 }
