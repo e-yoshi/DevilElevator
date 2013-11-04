@@ -59,11 +59,11 @@ public class EventFactory implements ThreadFactory {
                     waveList.add(waveSize);
                     if(crossRand){
                         for(int i=0; i<waveSize; i++){
-                            Minstrel m = new Minstrel();
-                            m.setCrossTime(rgen.nextInt(crossTimeRange));
-                            m.setBarrier(barrier);
-                            m.setName(""+id);
-                            threadList.add(m);
+                        	Commuter com = new Commuter();
+                            com.setCrossTime(rgen.nextInt(crossTimeRange));
+                            com.setBarrier(barrier);
+                            com.setName(""+id);
+                            threadList.add(com);
                             id++;
                         }
                     }
@@ -72,11 +72,11 @@ public class EventFactory implements ThreadFactory {
                     waveInterval.add(waveSize);
                 } else if (params[0].equals("minstrel")){
                     if(!crossRand){
-                        Minstrel m = new Minstrel();
-                        m.setCrossTime(Integer.parseInt(params[1]));
-                        m.setBarrier(barrier);
-                        m.setName(""+id);
-                        threadList.add(m);
+                    	Commuter com = new Commuter();
+                        com.setCrossTime(Integer.parseInt(params[1]));
+                        com.setBarrier(barrier);
+                        com.setName(""+id);
+                        threadList.add(com);
                         id++;
                     }
                 }                

@@ -2,13 +2,13 @@ package eventBarrier;
 
 import api.AbstractEventBarrier;
 
-public class Minstrel extends Thread{
+public class Commuter extends Thread{
 
     private int crossTime = 0;
     private String name = "";
     private AbstractEventBarrier barrier = null;
     
-    public Minstrel() {
+    public Commuter() {
     	super();
     	this.name = super.getName();
 		// TODO Auto-generated constructor stub
