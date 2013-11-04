@@ -1,32 +1,33 @@
 package eventBarrier;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadFactory;
+
+import api.AbstractEventBarrier;
 
 
 public class EventFactory implements ThreadFactory {
     
     private static final String FOLDER = "/testFiles/";
     private static final String SPLIT_AT = ",";
+    
     private List<Thread> threadList = new ArrayList<Thread>();
     private List<Integer> waveList = new ArrayList<Integer>();
     private List<Integer> waveInterval = new ArrayList<Integer>();
 
     private int raiseTime = 0;
     private Random rgen = new Random();
+    private AbstractEventBarrier barrier = null;
     
-    public EventFactory(String fileName) {
+    public EventFactory(String fileName, AbstractEventBarrier barrier) {
         readFile(fileName);
+        this.barrier = barrier;
     }
     
     private void readFile(String fileName){
@@ -40,6 +41,7 @@ public class EventFactory implements ThreadFactory {
             br = new BufferedReader(reader);
             boolean crossRand = false;
             int crossTimeRange = 0;
+            int id = 0;
             
         try {
             while ((line = br.readLine())!=null){
@@ -59,7 +61,10 @@ public class EventFactory implements ThreadFactory {
                         for(int i=0; i<waveSize; i++){
                             Minstrel m = new Minstrel();
                             m.setCrossTime(rgen.nextInt(crossTimeRange));
+                            m.setBarrier(barrier);
+                            m.setId(id);
                             threadList.add(newThread(m));
+                            id++;
                         }
                     }
                 } else if (params[0].equals("waveInterval")) {
@@ -69,7 +74,10 @@ public class EventFactory implements ThreadFactory {
                     if(!crossRand){
                         Minstrel m = new Minstrel();
                         m.setCrossTime(Integer.parseInt(params[1]));
+                        m.setBarrier(barrier);
+                        m.setId(id);
                         threadList.add(newThread(m));
+                        id++;
                     }
                 }                
             }

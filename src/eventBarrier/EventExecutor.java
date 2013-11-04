@@ -2,12 +2,11 @@ package eventBarrier;
 
 import java.util.ArrayList;
 import java.util.List;
-import api.AbstractEventBarrier;
 
 public class EventExecutor {
 
     private static final String filename = "events.csv";
-    private static AbstractEventBarrier barrier = new EventBarrier();
+    private static EventBarrier barrier = new EventBarrier();
     private static EventFactory factory = null;
     private static List<Thread> threadList = new ArrayList<Thread>();
     private static List<Integer> waveList = new ArrayList<Integer>();
@@ -15,20 +14,20 @@ public class EventExecutor {
     private static int raiseTime = 0;
 
     public EventExecutor(){
-        factory = new EventFactory(filename);
+        factory = new EventFactory(filename,barrier);
         threadList = factory.getThreadList();
         waveList = factory.getWaveList();  
         raiseTime = factory.getRaiseTime();
         waveInterval = factory.getWaveInterval();
+        barrier.setRaiseTime(raiseTime);
         execute();
     }
 
     private static void execute() {
         int accumulator = 0;
         int arrayPos = 0;
-        for(int i: waveList){
-            
-            for(int j=0; j<i; j++){
+        for(int waveSize: waveList){
+            for(int j=0; j<waveSize; j++){
                 threadList.get(j+accumulator).start();
             }
             
@@ -40,7 +39,7 @@ public class EventExecutor {
                 e.printStackTrace();
             }
             
-            accumulator += i;
+            accumulator += waveSize-1;
             arrayPos ++;
         }
     }

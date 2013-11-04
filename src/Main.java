@@ -14,6 +14,7 @@ public class Main {
 			// call the EventBarrier-- happens in the constructor.
 			EventExecutor ee = new EventExecutor();
 		}
+		/*
 		if (args[0].equals("p2part1")) {
 			// call the elevator part1
 		} else if (args[0].equals("p2part2")) {
@@ -21,6 +22,6 @@ public class Main {
 		} else if (args[0].equals("p2part3")) {
 			// call the elevator part3
 		}
-
+*/
 	}
 }

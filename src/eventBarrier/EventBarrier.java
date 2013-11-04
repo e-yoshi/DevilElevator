@@ -6,6 +6,8 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	static final String GATEKEEPER = "Gate Keeper";
 	private int numPassengers = 0;
 	private boolean bridgeIsLowered = false;
+	
+	private int raiseTime = 0;
 
 	@Override
 	public synchronized void arrive() {
@@ -75,13 +77,12 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 
 	}
 
-	public static void main(String args[]) {
-		EventBarrier barrier = new EventBarrier();
-		Thread passenger1 = new Thread(barrier, "Passenger 1");
-		Thread gateKeeper = new Thread(barrier, GATEKEEPER);
+	public int getRaiseTime() {
+		return raiseTime;
+	}
 
-		passenger1.start();
-
+	public void setRaiseTime(int raiseTime) {
+		this.raiseTime = raiseTime;
 	}
 
 }
