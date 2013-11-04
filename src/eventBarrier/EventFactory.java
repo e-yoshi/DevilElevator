@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadFactory;
 public class EventFactory implements ThreadFactory {
     
     private static final String FOLDER = "testResources\\";
-    private static final String SPLIT_AT = "\",\"";
+    private static final String SPLIT_AT = ",";
     private List<Thread> threadList = new ArrayList<Thread>();
     private List<Integer> waveList = new ArrayList<Integer>();
     private List<Integer> waveInterval = new ArrayList<Integer>();
