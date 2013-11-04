@@ -22,7 +22,7 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 					wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					
+
 				}
 			}
 		}
@@ -35,8 +35,8 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 			System.out.println("Closing Barrier!");
 			return;
 		}
-		
-		if(total==numFinished)
+
+		if (total == numFinished)
 			return;
 
 		while (numCrossing == 0) {
@@ -47,7 +47,7 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 				continue;
 			}
 		}
-		
+
 		operateBarrier(true);
 		System.out.println("Opening Barrier!");
 		notifyAll();

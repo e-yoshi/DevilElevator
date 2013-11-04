@@ -11,8 +11,7 @@ public abstract class AbstractElevator {
 	 * Other variables/data structures as needed goes here
 	 */
 
-	public AbstractElevator(int numFloors, int elevatorId,
-			int maxOccupancyThreshold) {
+	public AbstractElevator(int numFloors, int elevatorId, int maxOccupancyThreshold) {
 		this.numFloors = numFloors;
 		this.elevatorId = elevatorId;
 		this.maxOccupancyThreshold = maxOccupancyThreshold;
