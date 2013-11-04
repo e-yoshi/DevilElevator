@@ -26,8 +26,8 @@ public class EventFactory implements ThreadFactory {
     private AbstractEventBarrier barrier = null;
     
     public EventFactory(String fileName, AbstractEventBarrier barrier) {
-        readFile(fileName);
         this.barrier = barrier;
+        readFile(fileName);
     }
     
     private void readFile(String fileName){
@@ -63,7 +63,7 @@ public class EventFactory implements ThreadFactory {
                             com.setCrossTime(rgen.nextInt(crossTimeRange));
                             com.setBarrier(barrier);
                             com.setName(""+id);
-                            threadList.add(com);
+                            threadList.add(newThread(com));
                             id++;
                         }
                     }
@@ -76,7 +76,7 @@ public class EventFactory implements ThreadFactory {
                         com.setCrossTime(Integer.parseInt(params[1]));
                         com.setBarrier(barrier);
                         com.setName(""+id);
-                        threadList.add(com);
+                        threadList.add(newThread(com));
                         id++;
                     }
                 }                

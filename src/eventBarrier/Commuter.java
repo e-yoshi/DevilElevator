@@ -2,21 +2,14 @@ package eventBarrier;
 
 import api.AbstractEventBarrier;
 
-public class Commuter extends Thread{
+public class Commuter implements Runnable{
 
     private int crossTime = 0;
     private String name = "";
     private AbstractEventBarrier barrier = null;
     
-    public Commuter() {
-    	super();
-    	this.name = super.getName();
-		// TODO Auto-generated constructor stub
-	}
-    
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         System.out.println("Commuter "+name+" arrived!"+barrier);
         barrier.arrive();
         System.out.println("Commuter "+name+" woke up! Crossing barrier for "+ crossTime + "ms!");
@@ -48,6 +41,14 @@ public class Commuter extends Thread{
 
 	public void setBarrier(AbstractEventBarrier barrier) {
 		this.barrier = barrier;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 
