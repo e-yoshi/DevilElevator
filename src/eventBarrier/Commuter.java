@@ -10,7 +10,7 @@ public class Commuter implements Runnable{
     
     @Override
     public void run() {
-        System.out.println("Commuter "+name+" arrived!"+barrier);
+        System.out.println("Commuter "+name+" arrived!");
         barrier.arrive();
         System.out.println("Commuter "+name+" woke up! Crossing barrier for "+ crossTime + "ms!");
         try {

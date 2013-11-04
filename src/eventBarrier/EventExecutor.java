@@ -14,16 +14,18 @@ public class EventExecutor {
 
     public EventExecutor(){
     	barrier = new EventBarrier();
-    	System.out.println(barrier);
         factory = new EventFactory(filename, barrier);
         threadList = factory.getThreadList();
         waveList = factory.getWaveList();  
         waveInterval = factory.getWaveInterval();
         barrier.setRaiseTime(factory.getRaiseTime());
+        barrier.setTotal(threadList.size());
         execute();
     }
 
     private static void execute() {
+    	Thread barrierThread = new Thread(barrier);
+    	barrierThread.start();
         int accumulator = 0;
         int arrayPos = 0;
         for(int waveSize: waveList){
@@ -32,7 +34,6 @@ public class EventExecutor {
             	if(!thread.isAlive())
             		thread.start();
             }
-            
             try {
                 Thread.sleep(waveInterval.get(arrayPos));
             }
@@ -41,7 +42,7 @@ public class EventExecutor {
                 e.printStackTrace();
             }
             
-            accumulator += waveSize-1;
+            accumulator += waveSize;
             arrayPos ++;
         }
     }
