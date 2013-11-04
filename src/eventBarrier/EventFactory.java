@@ -75,8 +75,8 @@ public class EventFactory implements ThreadFactory {
                         Minstrel m = new Minstrel();
                         m.setCrossTime(Integer.parseInt(params[1]));
                         m.setBarrier(barrier);
-                        m.setId(id);
-                        threadList.add(newThread(m));
+                        m.setName(""+id);
+                        threadList.add(m);
                         id++;
                     }
                 }                

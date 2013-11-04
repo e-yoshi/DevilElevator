@@ -2,25 +2,31 @@ package eventBarrier;
 
 import api.AbstractEventBarrier;
 
-public class Minstrel implements Runnable{
+public class Minstrel extends Thread{
 
-	private int id = 0;
     private int crossTime = 0;
+    private String name = "";
     private AbstractEventBarrier barrier = null;
+    
+    public Minstrel() {
+    	super();
+    	this.name = super.getName();
+		// TODO Auto-generated constructor stub
+	}
     
     @Override
     public void run() {
         // TODO Auto-generated method stub
-        System.out.println("Minstrel "+id+" arrived!");
+        System.out.println("Minstrel "+name+" arrived!"+barrier);
         barrier.arrive();
-        System.out.println("Minstrel "+id+" woke up! Crossing barrier for "+ crossTime + "ms!");
+        System.out.println("Minstrel "+name+" woke up! Crossing barrier for "+ crossTime + "ms!");
         try {
 			Thread.sleep(crossTime);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        System.out.println("Minstrel "+id+" finished crossing! Completed!");
+        System.out.println("Minstrel "+name+" finished crossing! Completed!");
         barrier.complete();
     }
 
@@ -44,14 +50,5 @@ public class Minstrel implements Runnable{
 		this.barrier = barrier;
 	}
 
-
-	public int getId() {
-		return id;
-	}
-
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 public class EventExecutor {
 
     private static final String filename = "events.csv";
-    private static EventBarrier barrier = new EventBarrier();
+    private static EventBarrier barrier = null;
     private static EventFactory factory = null;
     private static List<Thread> threadList = new ArrayList<Thread>();
     private static List<Integer> waveList = new ArrayList<Integer>();
@@ -14,7 +14,9 @@ public class EventExecutor {
     private static int raiseTime = 0;
 
     public EventExecutor(){
-        factory = new EventFactory(filename,barrier);
+    	barrier = new EventBarrier();
+    	System.out.println(barrier);
+        factory = new EventFactory(filename, barrier);
         threadList = factory.getThreadList();
         waveList = factory.getWaveList();  
         raiseTime = factory.getRaiseTime();

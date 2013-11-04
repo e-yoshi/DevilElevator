@@ -3,27 +3,29 @@ package eventBarrier;
 import api.AbstractEventBarrier;
 
 public class EventBarrier extends AbstractEventBarrier implements Runnable {
-	static final String GATEKEEPER = "Gate Keeper";
-	private int numPassengers = 0;
-	private boolean bridgeIsLowered = false;
-	
 	private int raiseTime = 0;
+	static final String GATEKEEPER = "Gate Keeper";
+	private volatile int numWaiting = 0;
+	private volatile int numCrossing = 0;
+	private volatile boolean bridgeIsLowered = false;
+	
 
 	@Override
 	public synchronized void arrive() {
-		numPassengers++;
-
 		if (bridgeIsLowered) {
+			numCrossing ++;
 			return;
-		}
-
-		while (!bridgeIsLowered) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		} else {
+			while (!bridgeIsLowered) {
+				try {
+					Thread.currentThread().wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
+
+		
 
 	}
 
@@ -37,7 +39,7 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 		bridgeIsLowered = true;
 		this.notifyAll();
 
-		while (numPassengers > 0) {
+		while (numCrossing > 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -50,8 +52,8 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 
 	@Override
 	public synchronized void complete() {
-		numPassengers--;
-		if (numPassengers == 0) {
+		numCrossing--;
+		if (numCrossing == 0) {
 			notifyAll();
 		}
 
@@ -59,7 +61,7 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 
 	@Override
 	public synchronized int waiters() {
-		return numPassengers;
+		return numCrossing;
 	}
 
 	@Override
