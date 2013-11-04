@@ -8,12 +8,16 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	private boolean bridgeIsLowered = false;
 
 	@Override
-	public void arrive() {
+	public synchronized void arrive() {
 		numPassengers++;
+
+		if (bridgeIsLowered) {
+			return;
+		}
 
 		while (!bridgeIsLowered) {
 			try {
-				Thread.currentThread().wait();
+				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -22,24 +26,37 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	}
 
 	@Override
-	public void raise() {
+	public synchronized void raise() {
+
+		if (bridgeIsLowered) {
+			return;
+		}
+
 		bridgeIsLowered = true;
 		this.notifyAll();
 
 		while (numPassengers > 0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		bridgeIsLowered = false;
 
+	}
+
+	@Override
+	public synchronized void complete() {
+		numPassengers--;
+		if (numPassengers == 0) {
+			notifyAll();
 		}
 
 	}
 
 	@Override
-	public void complete() {
-		numPassengers--;
-
-	}
-
-	@Override
-	public int waiters() {
+	public synchronized int waiters() {
 		return numPassengers;
 	}
 
