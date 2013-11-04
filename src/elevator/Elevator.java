@@ -1,4 +1,6 @@
-package api;
+package elevator;
+
+import api.AbstractElevator;
 
 public class Elevator extends AbstractElevator implements Runnable {
 

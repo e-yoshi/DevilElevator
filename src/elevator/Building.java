@@ -1,4 +1,7 @@
-package api;
+package elevator;
+
+import api.AbstractBuilding;
+import api.AbstractElevator;
 
 public class Building extends AbstractBuilding implements Runnable {
 	private Elevator elevator;

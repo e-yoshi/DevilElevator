@@ -4,7 +4,6 @@ import api.AbstractEventBarrier;
 
 public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	private int raiseTime = 0;
-	static final String GATEKEEPER = "Gate Keeper";
 	private volatile int numFinished = 0;
 	private volatile int numCrossing = 0;
 	private volatile boolean openedBarrier = false;
@@ -69,7 +68,6 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 	public synchronized void complete() {
 		updateCrossing(false);
 		updateFinished(true);
-		//System.out.println("numFinished = " + numFinished + " numCrossing = "+ numCrossing);
 		if (numCrossing == 0) {
 			notifyAll();
 		}
