@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.concurrent.ThreadFactory;
 
 public class EventFactory implements ThreadFactory {
     
-    private static final String FOLDER = "testResources\\";
+    private static final String FOLDER = "/testFiles/";
     private static final String SPLIT_AT = ",";
     private List<Thread> threadList = new ArrayList<Thread>();
     private List<Integer> waveList = new ArrayList<Integer>();
@@ -28,25 +30,21 @@ public class EventFactory implements ThreadFactory {
     }
     
     private void readFile(String fileName){
-        URL url = this.getClass().getResource(FOLDER+fileName);
-        File file = new File(url.getPath());
-        
+        //URL url = this.getClass().getResourceAsStream(FOLDER+fileName);
+        //File file = new File(url.getPath());
+        Reader reader = new InputStreamReader(this.getClass().getResourceAsStream(FOLDER+fileName));
+
         BufferedReader br = null;
         String line = "";
-        try {
-            br = new BufferedReader(new FileReader(file));
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("File Not Found!");
-        }
-        
+
+            br = new BufferedReader(reader);
+            boolean crossRand = false;
+            int crossTimeRange = 0;
+            
         try {
             while ((line = br.readLine())!=null){
                 String[] params = line.split(SPLIT_AT); 
-                boolean crossRand = false;
-                int crossTimeRange = 0;
-                
+      
                 if(params[0].startsWith("//"))
                     continue;
                 else if(params[0].equals("raiseTime")) 

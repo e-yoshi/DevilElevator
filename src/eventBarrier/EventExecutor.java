@@ -6,7 +6,7 @@ import api.AbstractEventBarrier;
 
 public class EventExecutor {
 
-    private static final String filename = "testWave.cvs";
+    private static final String filename = "events.csv";
     private static AbstractEventBarrier barrier = new EventBarrier();
     private static EventFactory factory = null;
     private static List<Thread> threadList = new ArrayList<Thread>();
