@@ -15,7 +15,7 @@ public class EventExecutor {
     private static GateKeeper gateKeeper = new GateKeeper();
     private static long raiseTime = 0;
 
-    public static void main(String args[]){
+    public EventExecutor(){
         factory = new EventFactory(filename);
         threadList = factory.getThreadList();
         waveList = factory.getWaveList();  
