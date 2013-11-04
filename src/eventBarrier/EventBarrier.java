@@ -18,7 +18,7 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 		} else {
 			while (!bridgeIsLowered) {
 				try {
-					Thread.currentThread().wait();
+					wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

@@ -30,7 +30,9 @@ public class EventExecutor {
         int arrayPos = 0;
         for(int waveSize: waveList){
             for(int j=0; j<waveSize; j++){
-                threadList.get(j+accumulator).start();
+            	Thread thread = threadList.get(j+accumulator);
+            	if(!thread.isAlive())
+            		thread.start();
             }
             
             try {
