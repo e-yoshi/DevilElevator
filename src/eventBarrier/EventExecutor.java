@@ -24,8 +24,10 @@ public class EventExecutor {
 	}
 
 	private static void execute() {
-		Thread barrierThread = new Thread(barrier);
-		barrierThread.start();
+		Gatekeeper keeper = new Gatekeeper();
+		keeper.setBarrier(barrier);
+		Thread keeperThread = new Thread(keeper);
+		keeperThread.start();
 		int accumulator = 0;
 		int arrayPos = 0;
 		for (int waveSize : waveList) {

@@ -2,11 +2,12 @@ package eventBarrier;
 
 import api.AbstractEventBarrier;
 
-public class EventBarrier extends AbstractEventBarrier implements Runnable {
+public class EventBarrier extends AbstractEventBarrier {
 	private int raiseTime = 0;
 	private volatile int numFinished = 0;
 	private volatile int numCrossing = 0;
 	private volatile boolean openedBarrier = false;
+	private volatile boolean finished = false;
 	private int total = 0;
 
 	@Override
@@ -61,7 +62,6 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 		}
 		System.out.println("Closing Barrier!");
 		operateBarrier(false);
-
 	}
 
 	@Override
@@ -71,19 +71,12 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 		if (numCrossing == 0) {
 			notifyAll();
 		}
+		finished = (numFinished == total);
 	}
 
 	@Override
 	public synchronized int waiters() {
 		return numCrossing;
-	}
-
-	@Override
-	public void run() {
-		while (total > numFinished) {
-			raise();
-		}
-		System.out.println("All commuters crossed the EventBarrier!");
 	}
 
 	public synchronized void updateCrossing(boolean increment) {
@@ -127,5 +120,13 @@ public class EventBarrier extends AbstractEventBarrier implements Runnable {
 		}
 		openedBarrier = open;
 
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 }
