@@ -3,6 +3,8 @@ package eventBarrier;
 import java.util.ArrayList;
 import java.util.List;
 
+import util.EventFactory;
+
 public class EventExecutor {
 
 	private static final String FILENAME = "barrierEvents.csv";
