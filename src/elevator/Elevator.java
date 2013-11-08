@@ -49,6 +49,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 			}
 
 			if (floorsToVisit[currentFloor] != 0) {
+			    System.out.println("Elevator "+getId()+" Stopped on floor "+currentFloor);
 				OpenDoors();
 				ClosedDoors();
 			}

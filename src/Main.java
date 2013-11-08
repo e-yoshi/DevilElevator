@@ -14,14 +14,14 @@ public class Main {
             int numFloors = 100;
             int id = 0;
             Building b = new Building(numFloors, 1);
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 10; i++) {
                 int from = -1, to = -1;
                 while (from == to) {
                     from = generator.nextInt(100);
                     to = generator.nextInt(100);
                 }
                 
-                Passenger p = new Passenger(b, id,0,0 );
+                Passenger p = new Passenger(b, id,from,to);
                 Thread t = new Thread(p,"Passenger "+id);
                 id++;
                 t.start();
