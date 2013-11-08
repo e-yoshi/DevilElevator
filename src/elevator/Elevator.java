@@ -26,9 +26,11 @@ public class Elevator extends AbstractElevator implements Runnable {
 	}
 
 	@Override
-	public synchronized void OpenDoors() {
+	public void OpenDoors() {
 	    while (floorsToVisit[currentFloor] != 0) {
+	        synchronized(this) {
 	        notifyAll();
+	        }
 	    }
 
 	}
@@ -42,20 +44,22 @@ public class Elevator extends AbstractElevator implements Runnable {
 	@Override
 	public void VisitFloor(int floor) {
 		while (currentFloor != floor) {
-			if (currentFloor > floor) {
+			if (!isAscending && currentFloor != 0) {
 				currentFloor--;
-			} else if (currentFloor < floor) {
+			} else if (isAscending && currentFloor != numFloors-1) {
 				currentFloor++;
 			}
-
+			//System.out.println("Elevator is on floor "+currentFloor);
 			if (floorsToVisit[currentFloor] != 0) {
 			    System.out.println("Elevator "+getId()+" Stopped on floor "+currentFloor);
 				OpenDoors();
 				ClosedDoors();
 			}
+			
 		}
-
 		isAscending = !isAscending;
+
+		
 	}
 
 	@Override

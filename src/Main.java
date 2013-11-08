@@ -14,7 +14,7 @@ public class Main {
             int numFloors = 100;
             int id = 0;
             Building b = new Building(numFloors, 1);
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 3; i++) {
                 int from = -1, to = -1;
                 while (from == to) {
                     from = generator.nextInt(100);

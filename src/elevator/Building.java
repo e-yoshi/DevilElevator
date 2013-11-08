@@ -10,6 +10,8 @@ public class Building extends AbstractBuilding {
 	public Building(int numFloors, int numElevators) {
 		super(numFloors, numElevators);
 		elevator = new Elevator(numFloors, 0, 0);
+		Thread t = new Thread(elevator, "Elevator");
+		t.start();
 	}
 
 	@Override
