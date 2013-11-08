@@ -21,7 +21,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	public void run() {
 
 	    while (true) {
-	        if (isIdle()) {
+	        while (isIdle()) {
 	            System.out.println("Elevator "+elevatorId+" does not have requests");
 	            synchronized (this) {
 	                try {
