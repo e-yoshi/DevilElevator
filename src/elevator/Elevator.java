@@ -20,18 +20,18 @@ public class Elevator extends AbstractElevator implements Runnable {
 	public void run() {
 
 	    while (true) {
-//	        if (isIdle()) {
-//	            System.out.println("Elevator "+elevatorId+" does not have requests");
-//	            synchronized (this) {
-//	                try {
-//	                    this.wait();
-//	                }
-//	                catch (InterruptedException e) {
-//	                    // TODO Auto-generated catch block
-//	                    e.printStackTrace();
-//	                }
-//	            }
-//	        }
+	        if (isIdle()) {
+	            System.out.println("Elevator "+elevatorId+" does not have requests");
+	            synchronized (this) {
+	                try {
+	                    this.wait();
+	                }
+	                catch (InterruptedException e) {
+	                    // TODO Auto-generated catch block
+	                    e.printStackTrace();
+	                }
+	            }
+	        }
 	        if (isAscending) {
 	            VisitFloor(numFloors - 1);
 	        } else {
@@ -83,9 +83,12 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public synchronized boolean Enter() {
-		passengersRiding++;
-		floorsToVisit[currentFloor]--;
-		return true;
+	    if(passengersRiding == maxOccupancyThreshold)
+	        return false;
+	    
+	    passengersRiding++;
+	    floorsToVisit[currentFloor]--;
+	    return true;
 	}
 
 	@Override
@@ -124,6 +127,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 	        if (i > 0) return false;
 	    }
 	    return true;
+	}
+	
+	public int getNumberOfPassengers() {
+	    return passengersRiding;
 	}
 
 }

@@ -11,10 +11,12 @@ import api.AbstractElevator;
 public class Building extends AbstractBuilding {
 	private Elevator elevator;
 	private Map<Integer, ArrayList<Passenger>> peopleMap;
+	private int maxOccupancy;
 
 	public Building(int numFloors, int numElevators) {
 		super(numFloors, numElevators);
-		elevator = new Elevator(numFloors, 0, 0);
+		maxOccupancy = 5;
+		elevator = new Elevator(numFloors, 0, maxOccupancy);
 		Thread t = new Thread(elevator, "Elevator");
 		peopleMap = new HashMap<Integer, ArrayList<Passenger>>();
 		t.start();
@@ -26,7 +28,7 @@ public class Building extends AbstractBuilding {
 	    synchronized (elevator) {
 	        if(elevator.isIdle()) {
 	            
-                    //elevator.notify();
+                    elevator.notify();
                 }
 	        elevator.callToFloor(fromFloor);
 	        return elevator;
@@ -46,10 +48,12 @@ public class Building extends AbstractBuilding {
 	public AbstractElevator CallDown(int fromFloor) {
 	    
 	    synchronized(elevator) {
-	        if(elevator.isIdle()) {
-	            
-	            //elevator.notify();
+	        if(elevator.isIdle()) {         
+	            elevator.notify();
 	        }
+	        if(elevator.getNumberOfPassengers() == maxOccupancy)
+	            return null;
+	        
 	        elevator.callToFloor(fromFloor);
 	        return elevator;
 	    }

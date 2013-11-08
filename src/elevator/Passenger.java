@@ -30,25 +30,27 @@ public class Passenger implements Runnable {
         AbstractElevator elevator = null;
         System.out.println("Passenger " + id + " is in floor " + fromFloor + " goes to floor " +
                            destinationFloor);
-        if (fromFloor < destinationFloor) {
-            // In case no match is found
-            while (elevator == null) {
-                elevator = building.CallUp(fromFloor);
-            }
-        } // TODO implement someone that comes and leaves from same floor
-        else if (fromFloor > destinationFloor) {
-            while (elevator == null) {
+
+        while(true) {
+            if (fromFloor < destinationFloor) {
+                // In case no match is found
+                elevator = building.CallUp(fromFloor);    
+            } // TODO implement someone that comes and leaves from same floor
+            else if (fromFloor > destinationFloor) {
                 elevator = building.CallDown(fromFloor);
             }
-        }
 
-        RideElevator(elevator);
+            if (RideElevator(elevator)) 
+                break;
+            System.out.println("Passenger " + id + "has been stalled");
+        }
 
     }
 
-    private void RideElevator (AbstractElevator elevator) {
+    private boolean RideElevator (AbstractElevator elevator) {
+        if(elevator == null)
+            return false;
 
-        // Whats the difference between synchronizing the method or the elevator?
         System.out.println("Passenger " + id + " going to wait");
         synchronized (elevator) {
             while (elevator.getCurrentFloor() != fromFloor) {
@@ -62,7 +64,9 @@ public class Passenger implements Runnable {
                 }
             }
 
-            elevator.Enter();
+            if(!elevator.Enter())
+                return false;
+            
             System.out.println("Passenger " + id + " entered elevator " + elevator.getId() +
                                " from floor " + elevator.getCurrentFloor());
             // TODO Log passenger entering
@@ -86,7 +90,7 @@ public class Passenger implements Runnable {
                            " on floor " + elevator.getCurrentFloor());
             // TODO Log passenger exiting
         }
-       
+       return true;
 
     }
 
