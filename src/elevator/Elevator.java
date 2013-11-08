@@ -9,6 +9,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	private int passengersRiding = 0;
 	private int[] floorsToVisit;
 	private boolean isAscending = true;
+	private int visit;
 	
 
 	public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold) {
@@ -32,11 +33,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 	                }
 	            }
 	        }
-	        if (isAscending) {
-	            VisitFloor(numFloors - 1);
-	        } else {
-	            VisitFloor(0);
-	        }
+	        visit = isAscending ?  numFloors - 1 : 0;
+	        VisitFloor();
 	    }
 
 	}
@@ -60,8 +58,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 	}
 
 	@Override
-	public void VisitFloor(int floor) {
-		while (currentFloor != floor) {
+	public void VisitFloor() {
+		while (currentFloor != visit) {
 			if (!isAscending && currentFloor != 0) {
 				currentFloor--;
 			} else if (isAscending && currentFloor != numFloors-1) {
@@ -73,8 +71,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 			  
 			    OpenDoors();
 			    ClosedDoors();
-			    
+			    System.out.println("Elevator "+elevatorId+" is on floor "+currentFloor);
+	                    System.out.println("Ascending is "+isAscending+" and has "+passengersRiding+" people");
 			}
+			
 			
 		}
 		isAscending = !isAscending;
@@ -126,6 +126,21 @@ public class Elevator extends AbstractElevator implements Runnable {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
 	    }
+	}
+	
+	public synchronized void startElevator(int floor) {
+	    floorsToVisit[floor]++;
+	    isAscending = (currentFloor < floor) ? true : false;
+	    visit = isAscending ?  numFloors - 1 : 0;
+	    this.notify();
+	    
+	    try {
+                this.wait();
+            }
+            catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 	}
 	
 	public boolean isIdle() {

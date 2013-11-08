@@ -5,7 +5,7 @@ public abstract class AbstractElevator {
 	protected int numFloors;
 	protected int elevatorId;
 	protected int maxOccupancyThreshold;
-	protected int currentFloor = 1;
+	protected int currentFloor = 0;
 
 	/**
 	 * Other variables/data structures as needed goes here
@@ -31,7 +31,7 @@ public abstract class AbstractElevator {
 	public abstract void ClosedDoors();
 
 	/* Go to a requested floor */
-	public abstract void VisitFloor(int floor);
+	public abstract void VisitFloor();
 
 	/**
 	 * Elevator rider interface (part 1): invoked by rider threads.

@@ -13,8 +13,8 @@ public class Main {
             Random generator = new Random(34569);
             int numFloors = 100;
             int id = 0;
-            Building b = new Building(numFloors, 1);
-            for (int i = 0; i < 10; i++) {
+            Building b = new Building(numFloors, 2);
+            for (int i = 0; i < 20; i++) {
                 int from = -1, to = -1;
                 while (from == to) {
                     from = generator.nextInt(100);
