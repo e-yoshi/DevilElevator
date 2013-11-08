@@ -18,7 +18,6 @@ public class Building extends AbstractBuilding {
 		maxOccupancy = 5;
 		elevator = new Elevator(numFloors, 0, maxOccupancy);
 		Thread t = new Thread(elevator, "Elevator");
-		peopleMap = new HashMap<Integer, ArrayList<Passenger>>();
 		t.start();
 	}
 
@@ -66,15 +65,6 @@ public class Building extends AbstractBuilding {
 	     * 
 	     * } return null;
 	     */
-	}
-	
-	public void arriveAtFloor(int floor) {
-	    if(peopleMap.get(floor).isEmpty()) return;
-	    for (Passenger p : peopleMap.get(floor)) {
-	        synchronized (this) {
-	        p.notify();
-	        }
-	    }
 	}
 
 }
