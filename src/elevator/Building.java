@@ -25,10 +25,11 @@ public class Building extends AbstractBuilding {
 	public AbstractElevator CallUp(int fromFloor) {
 	    
 	    synchronized (elevator) {
-	        if(elevator.isIdle()) {
-	            
+	        if(elevator.isIdle()) { 
                     elevator.notify();
                 }
+	        if(elevator.getNumberOfPassengers() == maxOccupancy)
+                    return null;
 	        elevator.callToFloor(fromFloor);
 	        return elevator;
 	    }

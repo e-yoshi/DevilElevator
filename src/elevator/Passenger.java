@@ -42,16 +42,15 @@ public class Passenger implements Runnable {
 
             if (RideElevator(elevator)) 
                 break;
-            System.out.println("Passenger " + id + "has been stalled");
+            
         }
 
     }
 
     private boolean RideElevator (AbstractElevator elevator) {
-        if(elevator == null)
+        if(elevator == null) {
             return false;
-
-        System.out.println("Passenger " + id + " going to wait");
+        }
         synchronized (elevator) {
             while (elevator.getCurrentFloor() != fromFloor) {
                 try {
@@ -64,8 +63,10 @@ public class Passenger implements Runnable {
                 }
             }
 
-            if(!elevator.Enter())
-                return false;
+            if(!elevator.Enter()) {
+                System.out.println("Passenger " + id + " faces a full elevator and is disappointed");
+                return false;   
+            }
             
             System.out.println("Passenger " + id + " entered elevator " + elevator.getId() +
                                " from floor " + elevator.getCurrentFloor());

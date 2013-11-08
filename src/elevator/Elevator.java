@@ -44,6 +44,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	@Override
 	public void OpenDoors() {
 	    System.out.println("Opening doors at floor "+currentFloor+" and index is "+floorsToVisit[currentFloor]);
+	    System.out.println("passengers riding is "+passengersRiding);
 	    while (floorsToVisit[currentFloor] != 0) {
 	        synchronized(this) {
 	            notifyAll();
@@ -83,9 +84,11 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public synchronized boolean Enter() {
-	    if(passengersRiding == maxOccupancyThreshold)
+	    if(passengersRiding == maxOccupancyThreshold) {
+	        checkThatItIsFullAndBeDisappointed();
 	        return false;
-	    
+	    }
+    
 	    passengersRiding++;
 	    floorsToVisit[currentFloor]--;
 	    return true;
@@ -98,12 +101,15 @@ public class Elevator extends AbstractElevator implements Runnable {
 		floorsToVisit[currentFloor]--;
 
 	}
+	
+	private synchronized void checkThatItIsFullAndBeDisappointed() {
+	    floorsToVisit[currentFloor]--;
+	}
 
 	@Override
 	public synchronized void RequestFloor(int floor) {
 	    
 		floorsToVisit[floor]++;
-		this.notify();
 
 	}
 
