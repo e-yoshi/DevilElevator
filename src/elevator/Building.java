@@ -10,62 +10,60 @@ import api.AbstractElevator;
 
 public class Building extends AbstractBuilding {
 	private Elevator elevator;
-	private Map<Integer, ArrayList<Passenger>> peopleMap;
+	private ArrayList<Elevator> elevators;
 	private int maxOccupancy;
 
 	public Building(int numFloors, int numElevators) {
 		super(numFloors, numElevators);
 		maxOccupancy = 5;
 		elevator = new Elevator(numFloors, 0, maxOccupancy);
-		Thread t = new Thread(elevator, "Elevator");
-		t.start();
+		for(int i = 0; i<numElevators; i++) {
+		    Elevator elevatorService = new Elevator(numFloors, i, maxOccupancy);
+		    Thread t = new Thread(elevatorService, "Elevator "+i);
+		    t.start();
+		}
 	}
 
 	@Override
 	public AbstractElevator CallUp(int fromFloor) {
-	    
-	    synchronized (elevator) {
-	        if(elevator.isIdle()) { 
-                    elevator.notify();
-                }
-	        if(elevator.getNumberOfPassengers() == maxOccupancy)
-                    return null;
-	        elevator.callToFloor(fromFloor);
-	        return elevator;
+	    for(Elevator elevator : elevators) {
+	        synchronized (elevator) {
+	            if(elevator.getNumberOfPassengers() == maxOccupancy)
+	                continue;
+	            
+	            if(elevator.isIdle()) { 
+                        elevator.notify();
+                    }
+	            
+	            if ((elevator.isAscending() && elevator.getCurrentFloor() <= fromFloor) ||
+	                    (!elevator.isAscending() && fromFloor == 0)) {
+	                elevator.callToFloor(fromFloor);
+	                return elevator;
+	            }
+	        }
 	    }
-
-	    // This if statement will be useful for multiple elevators
-	    // Since we only have one, we return the only one
-	    /*
-	     * if (elevator.isAscending() && elevator.getCurrentFloor() <=
-	     * fromFloor) {
-	     * 
-	     * } return null;
-	     */
+	    return null;
 	}
 
 	@Override
 	public AbstractElevator CallDown(int fromFloor) {
 	    
-	    synchronized(elevator) {
-	        if(elevator.isIdle()) {         
-	            elevator.notify();
-	        }
-	        if(elevator.getNumberOfPassengers() == maxOccupancy)
-	            return null;
-	        
-	        elevator.callToFloor(fromFloor);
-	        return elevator;
-	    }
-
-	    // This if statement will be useful for multiple elevators
-	    // Since we only have one, we return the only one
-	    /*
-	     * if (!elevator.isAscending() && elevator.getCurrentFloor() >=
-	     * fromFloor) {
-	     * 
-	     * } return null;
-	     */
+	    for(Elevator elevator : elevators) {
+                synchronized (elevator) {
+                    if(elevator.getNumberOfPassengers() == maxOccupancy)
+                        continue;
+                    
+                    if(elevator.isIdle()) { 
+                        elevator.notify();
+                    }
+                    
+                    if ((!elevator.isAscending() && elevator.getCurrentFloor() >= fromFloor) ||
+                            (elevator.isAscending() && fromFloor == numFloors-1)) {
+                        elevator.callToFloor(fromFloor);
+                        return elevator;
+                    }
+                }
+            }
+            return null;
 	}
-
 }
