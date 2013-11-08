@@ -53,7 +53,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void ClosedDoors() {
-	    System.out.println("Closing doors");
+	    System.out.println("Closing doors from floor "+currentFloor);
 	    //TODO Log this
 	}
 
@@ -71,8 +71,6 @@ public class Elevator extends AbstractElevator implements Runnable {
 			  
 			    OpenDoors();
 			    ClosedDoors();
-			    System.out.println("Elevator "+elevatorId+" is on floor "+currentFloor);
-	                    System.out.println("Ascending is "+isAscending+" and has "+passengersRiding+" people");
 			}
 			
 			
@@ -102,6 +100,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	}
 	
+	/**
+	 * Invoked by passenger when a full elevator arrives
+	 * Frees the request for the current floor without adding passengers
+	 */
 	private synchronized void checkThatItIsFullAndBeDisappointed() {
 	    floorsToVisit[currentFloor]--;
 	}
@@ -143,6 +145,9 @@ public class Elevator extends AbstractElevator implements Runnable {
             }
 	}
 	
+	/**
+	 * Checks if this elevator has to stop in any floor
+	 */
 	public boolean isIdle() {
 	    for (int i : floorsToVisit) {
 	        if (i > 0) return false;
