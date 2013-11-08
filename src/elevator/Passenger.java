@@ -23,10 +23,15 @@ public class Passenger implements Runnable {
 	public void run() {
 	    AbstractElevator elevator = null;
 	    if (fromFloor < destinationFloor) {
-	        elevator = building.CallUp(fromFloor);
+	        //In case no match is found
+	        while(elevator == null) {
+	            elevator = building.CallUp(fromFloor);
+	        }
 	    } //TODO implement someone that comes and leaves from same floor
 	    else if (fromFloor > destinationFloor){
-	        elevator = building.CallDown(fromFloor);
+	        while(elevator == null) {
+	            elevator = building.CallDown(fromFloor);
+	        }
 	    }
 	    
 	    RideElevator(elevator);
@@ -41,7 +46,7 @@ public class Passenger implements Runnable {
 	            elevator.wait();
 	        }
 	        catch (InterruptedException e) {
-	            // TODO Auto-generated catch block
+	            // TODO Log error
 	            e.printStackTrace();
 	        }
 	    }

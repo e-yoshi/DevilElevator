@@ -26,11 +26,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 	}
 
 	@Override
-	public void OpenDoors() {
-		// Synchronize?
-		while (floorsToVisit[currentFloor] != 0) {
-			notifyAll();
-		}
+	public synchronized void OpenDoors() {
+	    while (floorsToVisit[currentFloor] != 0) {
+	        notifyAll();
+	    }
 
 	}
 
@@ -56,17 +55,17 @@ public class Elevator extends AbstractElevator implements Runnable {
 		}
 
 		isAscending = !isAscending;
-
 	}
 
 	@Override
-	public boolean Enter() {
+	public synchronized boolean Enter() {
 		passengersRiding++;
+		floorsToVisit[currentFloor]--;
 		return true;
 	}
 
 	@Override
-	public void Exit() {
+	public synchronized void Exit() {
 		passengersRiding--;
 		// No error check yet in case this is 0 already
 		floorsToVisit[currentFloor]--;
@@ -74,7 +73,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	}
 
 	@Override
-	public void RequestFloor(int floor) {
+	public synchronized void RequestFloor(int floor) {
 		floorsToVisit[floor]++;
 
 	}
@@ -83,8 +82,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 		return isAscending;
 	}
 
-	public void callToFloor(int floor) {
-		floorsToVisit[floor]++;
+	public synchronized void callToFloor(int floor) { 
+	    floorsToVisit[floor]++;
 	}
 
 }
