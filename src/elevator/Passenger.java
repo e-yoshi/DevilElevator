@@ -21,27 +21,36 @@ public class Passenger implements Runnable {
 
 	@Override
 	public void run() {
-		AbstractElevator elevator;
-		if (fromFloor > destinationFloor) {
-			elevator = building.CallDown(fromFloor);
-		}
-		// Maybe check if dest and from are the same
-		else {
-			elevator = building.CallUp(fromFloor);
-		}
-		// Synchronize?
-		elevator.Enter();
-		elevator.RequestFloor(destinationFloor);
-		while (elevator.getCurrentFloor() != destinationFloor) {
-			try {
-				elevator.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		elevator.Exit();
+	    AbstractElevator elevator = null;
+	    if (fromFloor < destinationFloor) {
+	        elevator = building.CallUp(fromFloor);
+	    } //TODO implement someone that comes and leaves from same floor
+	    else if (fromFloor > destinationFloor){
+	        elevator = building.CallDown(fromFloor);
+	    }
+	    
+	    RideElevator(elevator);
 
 	}
+	
+	private synchronized void RideElevator(AbstractElevator elevator) {
+        
+            //Whats the difference between synchronizing the method or the elevator?
+                elevator.Enter();
+                //TODO Log passenger entering
+                elevator.RequestFloor(destinationFloor);
+                //TODO Log floor request
+                while (elevator.getCurrentFloor() != destinationFloor) {
+                    try {
+                        elevator.wait();
+                    } catch (InterruptedException e) {
+                        // TODO Write error on log
+                        e.printStackTrace();
+                    }
+                }
+                elevator.Exit();
+                //TODO Log passenger exiting
+            
+        }
 
 }
