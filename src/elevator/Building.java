@@ -1,6 +1,4 @@
-package src.elevator;
-
-
+package elevator;
 
 import elevator.Elevator;
 import api.AbstractBuilding;

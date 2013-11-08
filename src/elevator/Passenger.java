@@ -14,6 +14,11 @@ public class Passenger implements Runnable {
 		destinationFloor = dest;
 		fromFloor = from;
 	}
+	
+	public Passenger(Building b, int id, int from, int dest) {
+	    this(id, from, dest);
+            setBuilding(b);
+    }
 
 	public void setBuilding(Building b) {
 		building = b;
