@@ -30,12 +30,8 @@ public class Passenger implements Runnable {
 	    System.out.println("Passenger "+id+" is in floor "+fromFloor+" goes to floor "+destinationFloor);
 	    if (fromFloor < destinationFloor) {
 	        //In case no match is found
-	        System.out.println("Passenger "+id+" calling up");
 	        while(elevator == null) {
 	            elevator = building.CallUp(fromFloor);
-	        }
-	        if (elevator == null) {
-	            System.out.println("Elevator is null");
 	        }
 	    } //TODO implement someone that comes and leaves from same floor
 	    else if (fromFloor > destinationFloor){
@@ -48,9 +44,11 @@ public class Passenger implements Runnable {
 
 	}
 	
-	private synchronized void RideElevator(AbstractElevator elevator) {
+	private void RideElevator(AbstractElevator elevator) {
 
 	    //Whats the difference between synchronizing the method or the elevator?
+	    System.out.println("Passenger "+id+" going to wait");
+	    synchronized(elevator) {
 	    while (elevator.getCurrentFloor() != fromFloor) {
 	        try {
 	            elevator.wait();
@@ -61,12 +59,14 @@ public class Passenger implements Runnable {
 	            e.printStackTrace();
 	        }
 	    }
+	    }
 	    elevator.Enter();
 	    System.out.println("Passenger "+id+" entered elevator "+elevator.getId()+" from floor "+fromFloor);
 	    //TODO Log passenger entering
 	    elevator.RequestFloor(destinationFloor);
 	    System.out.println("Passenger "+id+" requested floor "+destinationFloor);
 	    //TODO Log floor request
+	    synchronized(elevator) {
 	    while (elevator.getCurrentFloor() != destinationFloor) {
 	        try {
 	            elevator.wait();
@@ -75,6 +75,7 @@ public class Passenger implements Runnable {
 	            System.out.println("Error waiting in elevator");
 	            e.printStackTrace();
 	        }
+	    }
 	    }
 	    elevator.Exit();
 	    System.out.println("Passenger "+id+" exited elevator "+elevator.getId()+" on floor "+elevator.getCurrentFloor());
