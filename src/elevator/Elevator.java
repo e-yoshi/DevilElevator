@@ -1,5 +1,7 @@
 package elevator;
 
+import java.util.HashMap;
+import java.util.Map;
 import api.AbstractElevator;
 
 public class Elevator extends AbstractElevator implements Runnable {
@@ -7,6 +9,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	private int passengersRiding = 0;
 	private int[] floorsToVisit;
 	private boolean isAscending = true;
+	
 
 	public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold) {
 		super(numFloors, elevatorId, maxOccupancyThreshold);
@@ -15,21 +18,35 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void run() {
-		while (true) {
-			if (isAscending) {
-				VisitFloor(numFloors - 1);
-			} else {
-				VisitFloor(0);
-			}
-		}
+
+	    while (true) {
+//	        if (isIdle()) {
+//	            System.out.println("Elevator "+elevatorId+" does not have requests");
+//	            synchronized (this) {
+//	                try {
+//	                    this.wait();
+//	                }
+//	                catch (InterruptedException e) {
+//	                    // TODO Auto-generated catch block
+//	                    e.printStackTrace();
+//	                }
+//	            }
+//	        }
+	        if (isAscending) {
+	            VisitFloor(numFloors - 1);
+	        } else {
+	            VisitFloor(0);
+	        }
+	    }
 
 	}
 
 	@Override
 	public void OpenDoors() {
+	    System.out.println("Opening doors at floor "+currentFloor+" and index is "+floorsToVisit[currentFloor]);
 	    while (floorsToVisit[currentFloor] != 0) {
 	        synchronized(this) {
-	        notifyAll();
+	            notifyAll();
 	        }
 	    }
 
@@ -37,8 +54,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void ClosedDoors() {
-		// TODO Auto-generated method stub
-
+	    System.out.println("Closing doors");
+	    //TODO Log this
 	}
 
 	@Override
@@ -52,8 +69,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 			//System.out.println("Elevator is on floor "+currentFloor);
 			if (floorsToVisit[currentFloor] != 0) {
 			    System.out.println("Elevator "+getId()+" Stopped on floor "+currentFloor);
-				OpenDoors();
-				ClosedDoors();
+			  
+			    OpenDoors();
+			    ClosedDoors();
+			    
 			}
 			
 		}
@@ -79,7 +98,9 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public synchronized void RequestFloor(int floor) {
+	    
 		floorsToVisit[floor]++;
+		this.notify();
 
 	}
 
@@ -89,6 +110,20 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	public synchronized void callToFloor(int floor) { 
 	    floorsToVisit[floor]++;
+	    try {
+	        this.wait();
+	    }
+	    catch (InterruptedException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    }
+	}
+	
+	public boolean isIdle() {
+	    for (int i : floorsToVisit) {
+	        if (i > 0) return false;
+	    }
+	    return true;
 	}
 
 }

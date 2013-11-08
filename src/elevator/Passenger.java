@@ -46,14 +46,14 @@ public class Passenger implements Runnable {
 
     }
 
-    private synchronized void RideElevator (AbstractElevator elevator) {
+    private void RideElevator (AbstractElevator elevator) {
 
         // Whats the difference between synchronizing the method or the elevator?
         System.out.println("Passenger " + id + " going to wait");
         synchronized (elevator) {
             while (elevator.getCurrentFloor() != fromFloor) {
                 try {
-                    elevator.wait();
+                     elevator.wait();   
                 }
                 catch (InterruptedException e) {
                     // TODO Log error
@@ -68,9 +68,9 @@ public class Passenger implements Runnable {
             // TODO Log passenger entering
             elevator.RequestFloor(destinationFloor);
             System.out.println("Passenger " + id + " requested floor " + destinationFloor);
-        }
-        // TODO Log floor request
-        synchronized (elevator) {
+            
+            
+            // TODO Log floor request
             while (elevator.getCurrentFloor() != destinationFloor) {
                 try {
                     elevator.wait();
@@ -82,11 +82,11 @@ public class Passenger implements Runnable {
                 }
             }
             elevator.Exit();
-        System.out.println("Passenger " + id + " exited elevator " + elevator.getId() +
+            System.out.println("Passenger " + id + " exited elevator " + elevator.getId() +
                            " on floor " + elevator.getCurrentFloor());
+            // TODO Log passenger exiting
         }
-        
-        // TODO Log passenger exiting
+       
 
     }
 
