@@ -1,6 +1,7 @@
 package elevator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import elevator.Elevator;
 import api.AbstractBuilding;
 import api.AbstractElevator;
@@ -24,6 +25,7 @@ public class Building extends AbstractBuilding {
 
 	@Override
 	public AbstractElevator CallUp(int fromFloor) {
+	    shuffleElevators();
 	    for(Elevator elevator : elevators) {
 	        synchronized (elevator) {
 	            if(elevator.getNumberOfPassengers() == maxOccupancy)
@@ -46,12 +48,12 @@ public class Building extends AbstractBuilding {
 
 	@Override
 	public AbstractElevator CallDown(int fromFloor) {
-	    
+	    shuffleElevators();
 	    for(Elevator elevator : elevators) {
                 synchronized (elevator) {
                     if(elevator.getNumberOfPassengers() == maxOccupancy)
                         continue;
-                  //TODO make it look good
+                    //TODO make it look good
                     if(elevator.isIdle()) { 
                         elevator.startElevator(fromFloor);
                         return elevator;
@@ -65,5 +67,13 @@ public class Building extends AbstractBuilding {
                 }
             }
             return null;
+	}
+	
+	/**
+	 * Adds randomness to the list being iterated, otherwise the first
+	 * elevator will always be returned if available somehow
+	 */
+	private synchronized void shuffleElevators() {
+	    Collections.shuffle(elevators);
 	}
 }

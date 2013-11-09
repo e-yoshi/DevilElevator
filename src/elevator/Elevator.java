@@ -41,7 +41,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void OpenDoors() {
-	    System.out.println("Opening doors at floor "+currentFloor);
+	    System.out.println("Elevato "+elevatorId+" opening doors at floor "+currentFloor);
 	    while (floorsToVisit[currentFloor] != 0) {
 	        synchronized(this) {
 	            notifyAll();
@@ -52,7 +52,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void ClosedDoors() {
-	    System.out.println("Closing doors from floor "+currentFloor);
+	    System.out.println("Elevator "+elevatorId+" Closing doors from floor "+currentFloor);
 	    //TODO Log this
 	}
 
