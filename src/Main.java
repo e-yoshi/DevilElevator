@@ -1,12 +1,17 @@
 import java.util.Random;
+import java.util.logging.Level;
+
 import simpleEventBarrier.SimpleEventExecutor;
 import elevator.Building;
 import elevator.Passenger;
 import eventBarrier.EventExecutor;
+import util.MessageLogger;
 
 public class Main {
 
     public static void main(String args[]) {
+    	MessageLogger.getInstance();
+    	MessageLogger.myLogger.log(Level.INFO, "Begining Program");
         if (args.length == 0) {
             // No options specified; make the default as the part 3 elevator
             // submission

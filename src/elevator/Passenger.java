@@ -1,6 +1,9 @@
 package elevator;
 
+import java.util.logging.Level;
+
 import api.AbstractElevator;
+import util.MessageLogger;
 
 
 public class Passenger implements Runnable {
@@ -59,6 +62,7 @@ public class Passenger implements Runnable {
                 catch (InterruptedException e) {
                     // TODO Log error
                     System.out.println("Error waiting for elevator");
+                    MessageLogger.myLogger.log(Level.WARNING,"Error waiting for elevator at floor: " + fromFloor);
                     e.printStackTrace();
                 }
             }
@@ -71,6 +75,8 @@ public class Passenger implements Runnable {
             System.out.println("Passenger " + id + " entered elevator " + elevator.getId() +
                                " from floor " + elevator.getCurrentFloor());
             // TODO Log passenger entering
+            MessageLogger.myLogger.log(Level.INFO, "Passenger " + id + " entered elevator " + elevator.getId() +
+                    " from floor " + elevator.getCurrentFloor());
             elevator.RequestFloor(destinationFloor);
             System.out.println("Passenger " + id + " requested floor " + destinationFloor);
             
@@ -82,6 +88,7 @@ public class Passenger implements Runnable {
                 }
                 catch (InterruptedException e) {
                     // TODO Write error on log
+                	MessageLogger.myLogger.log(Level.WARNING, "Error waiting in Elevator at: " + elevator.getCurrentFloor());
                     System.out.println("Error waiting in elevator");
                     e.printStackTrace();
                 }
@@ -89,7 +96,10 @@ public class Passenger implements Runnable {
             elevator.Exit();
             System.out.println("Passenger " + id + " exited elevator " + elevator.getId() +
                            " on floor " + elevator.getCurrentFloor());
+            
             // TODO Log passenger exiting
+            MessageLogger.myLogger.log(Level.INFO, "Passenger " + id + " exited elevator " + elevator.getId() +
+                           " on floor " + elevator.getCurrentFloor());
         }
        return true;
 

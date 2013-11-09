@@ -1,5 +1,8 @@
 package elevator;
 
+import java.util.logging.Level;
+
+import util.MessageLogger;
 import api.AbstractElevator;
 
 public class Elevator extends AbstractElevator implements Runnable {
@@ -53,6 +56,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 		System.out.println("Elevator " + elevatorId
 				+ " Closing doors from floor " + currentFloor);
 		// TODO Log this
+		MessageLogger.myLogger.log(Level.INFO, "Elevator " + elevatorId
+				+ " Closing doors from floor " + currentFloor);
 	}
 
 	@Override
