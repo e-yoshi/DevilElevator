@@ -170,7 +170,6 @@ public class Elevator extends AbstractElevator implements Runnable {
 	}
 	
 	/**
-	 * 
 	 * @return current number of passengers in this elevator
 	 */
 	public int getNumberOfPassengers() {
