@@ -41,8 +41,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void OpenDoors() {
-	    System.out.println("Opening doors at floor "+currentFloor+" and index is "+floorsToVisit[currentFloor]);
-	    System.out.println("passengers riding is "+passengersRiding);
+	    System.out.println("Opening doors at floor "+currentFloor);
 	    while (floorsToVisit[currentFloor] != 0) {
 	        synchronized(this) {
 	            notifyAll();
@@ -109,16 +108,22 @@ public class Elevator extends AbstractElevator implements Runnable {
 	}
 
 	@Override
-	public synchronized void RequestFloor(int floor) {
-	    
+	public synchronized void RequestFloor(int floor) {    
 		floorsToVisit[floor]++;
-
 	}
 
+	/**
+	 * 
+	 * @return true if elevator is going up
+	 */
 	public boolean isAscending() {
 		return isAscending;
 	}
 
+	/**
+	 * Invoked by building to call an elevator to a passenger
+	 * @param floor the floor a passenger is waiting
+	 */
 	public synchronized void callToFloor(int floor) { 
 	    floorsToVisit[floor]++;
 	    try {
@@ -130,11 +135,20 @@ public class Elevator extends AbstractElevator implements Runnable {
 	    }
 	}
 	
+	/**
+	 * Called when an elevator is idle. 
+	 * Resets to list of floor and direction the elevator needs to go
+	 * @param floor the floor a passenger is waiting
+	 */
 	public synchronized void startElevator(int floor) {
 	    floorsToVisit[floor]++;
 	    isAscending = (currentFloor < floor) ? true : false;
 	    visit = isAscending ?  numFloors - 1 : 0;
-	    this.notify();
+	    
+	    //Wake up idle thread
+	 
+	    this.notifyAll();
+	    
 	    
 	    try {
                 this.wait();
@@ -155,6 +169,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 	    return true;
 	}
 	
+	/**
+	 * 
+	 * @return current number of passengers in this elevator
+	 */
 	public int getNumberOfPassengers() {
 	    return passengersRiding;
 	}

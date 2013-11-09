@@ -11,14 +11,14 @@ public class Main {
             // No options specified; make the default as the part 3 elevator
             // submission
             Random generator = new Random(34569);
-            int numFloors = 100;
+            int numFloors = 200;
             int id = 0;
-            Building b = new Building(numFloors, 4);
-            for (int i = 0; i < 50; i++) {
+            Building b = new Building(numFloors, 10);
+            for (int i = 0; i < 200; i++) {
                 int from = -1, to = -1;
                 while (from == to) {
-                    from = generator.nextInt(100);
-                    to = generator.nextInt(100);
+                    from = generator.nextInt(200);
+                    to = generator.nextInt(200);
                 }
                 
                 Passenger p = new Passenger(b, id,from,to);

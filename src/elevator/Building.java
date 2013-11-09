@@ -6,17 +6,14 @@ import api.AbstractBuilding;
 import api.AbstractElevator;
 
 public class Building extends AbstractBuilding {
-	//private Elevator elevator;
 	private ArrayList<Elevator> elevators;
 	private int maxOccupancy;
-	public int complete = 0;
 
 	public Building(int numFloors, int numElevators) {
 		super(numFloors, numElevators);
-		maxOccupancy = 5;
+		maxOccupancy = 15;
 		elevators = new ArrayList<Elevator>();
 
-		//elevator = new Elevator(numFloors, 0, maxOccupancy);
 		for(int i = 0; i<numElevators; i++) {
 		    Elevator elevatorService = new Elevator(numFloors, i, maxOccupancy);
 		    elevators.add(elevatorService);

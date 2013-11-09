@@ -44,8 +44,6 @@ public class Passenger implements Runnable {
                 break;
             
         }
-        building.complete++;
-        System.out.println(building.complete+" Passengers have arrived to their destination");
 
     }
 
