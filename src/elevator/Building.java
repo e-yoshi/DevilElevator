@@ -15,65 +15,74 @@ public class Building extends AbstractBuilding {
 		maxOccupancy = 15;
 		elevators = new ArrayList<Elevator>();
 
-		for(int i = 0; i<numElevators; i++) {
-		    Elevator elevatorService = new Elevator(numFloors, i, maxOccupancy);
-		    elevators.add(elevatorService);
-		    Thread t = new Thread(elevatorService, "Elevator "+i);
-		    t.start();
+		for (int i = 0; i < numElevators; i++) {
+			Elevator elevatorService = new Elevator(numFloors, i, maxOccupancy);
+			elevators.add(elevatorService);
+			Thread t = new Thread(elevatorService, "Elevator " + i);
+			t.start();
 		}
+	}
+
+	// int 1 = up, int -1 = down
+	private AbstractElevator callCorrectElevator(Elevator elevator,
+			int floorFrom, int upOrDown) {
+
+		if (elevator.isIdle()) {
+			elevator.startElevator(floorFrom);
+			return elevator;
+		}
+
+		if (upOrDown < 0) {
+			if ((elevator.isAscending() && elevator.getCurrentFloor() <= floorFrom)) {
+
+				elevator.callToFloor(floorFrom);
+
+				return elevator;
+			}
+		}else{
+			if ((elevator.isAscending() && elevator.getCurrentFloor() >= floorFrom)) {
+
+				elevator.callToFloor(floorFrom);
+
+				return elevator;
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public AbstractElevator CallUp(int fromFloor) {
-	    shuffleElevators();
-	    for(Elevator elevator : elevators) {
-	        synchronized (elevator) {
-	            if(elevator.getNumberOfPassengers() == maxOccupancy)
-	                continue;
-	            //TODO make it look good
-	            if(elevator.isIdle()) { 
-                        elevator.startElevator(fromFloor);
-                        return elevator;
-                    }
-	            if ((elevator.isAscending() && elevator.getCurrentFloor() <= fromFloor)) {     
-	                
-	                elevator.callToFloor(fromFloor);
-	                
-	                return elevator;
-	            }
-	        }
-	    }
-	    return null;
+		shuffleElevators();
+		for (Elevator elevator : elevators) {
+			synchronized (elevator) {
+				if (elevator.getNumberOfPassengers() == maxOccupancy)
+					continue;
+				// TODO make it look good
+				return callCorrectElevator(elevator, fromFloor, -1);
+			}
+		}
+		return null;
 	}
 
 	@Override
 	public AbstractElevator CallDown(int fromFloor) {
-	    shuffleElevators();
-	    for(Elevator elevator : elevators) {
-                synchronized (elevator) {
-                    if(elevator.getNumberOfPassengers() == maxOccupancy)
-                        continue;
-                    //TODO make it look good
-                    if(elevator.isIdle()) { 
-                        elevator.startElevator(fromFloor);
-                        return elevator;
-                    }
-                    if ((!elevator.isAscending() && elevator.getCurrentFloor() >= fromFloor)) {
-                        
-                        elevator.callToFloor(fromFloor);
-                        
-                        return elevator;
-                    }
-                }
-            }
-            return null;
+		shuffleElevators();
+		for (Elevator elevator : elevators) {
+			synchronized (elevator) {
+				if (elevator.getNumberOfPassengers() == maxOccupancy)
+					continue;
+				// TODO make it look good
+				return callCorrectElevator(elevator, fromFloor, 1);
+			}
+		}
+		return null;
 	}
-	
+
 	/**
-	 * Adds randomness to the list being iterated, otherwise the first
-	 * elevator will always be returned if available somehow
+	 * Adds randomness to the list being iterated, otherwise the first elevator
+	 * will always be returned if available somehow
 	 */
 	private synchronized void shuffleElevators() {
-	    Collections.shuffle(elevators);
+		Collections.shuffle(elevators);
 	}
 }
