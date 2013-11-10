@@ -24,25 +24,19 @@ public class Building extends AbstractBuilding {
 	}
 
 	// int 1 = up, int -1 = down
-	private boolean callCorrectElevator(Elevator elevator, int floorFrom, int upOrDown) {
-
+	private boolean callCorrectElevator(Elevator elevator, int floorFrom, boolean up) {
 		if (elevator.isIdle()) {
 			elevator.startElevator(floorFrom);
 			return true;
 		}
-
-		if (upOrDown < 0) {
+		if (!up) {
 			if ((elevator.isAscending() && elevator.getCurrentFloor() <= floorFrom)) {
-
 				elevator.callToFloor(floorFrom);
-
 				return true;
 			}
 		} else {
 			if ((elevator.isAscending() && elevator.getCurrentFloor() >= floorFrom)) {
-
 				elevator.callToFloor(floorFrom);
-
 				return true;
 			}
 		}
@@ -57,7 +51,7 @@ public class Building extends AbstractBuilding {
 				synchronized (elevator) {
 					if (elevator.getNumberOfPassengers() == maxOccupancy)
 						continue;
-					if (callCorrectElevator(elevator, fromFloor, -1))
+					if (callCorrectElevator(elevator, fromFloor, false))
 						return elevator;
 				}
 			}
@@ -72,7 +66,7 @@ public class Building extends AbstractBuilding {
 				synchronized (elevator) {
 					if (elevator.getNumberOfPassengers() == maxOccupancy)
 						continue;
-					if (callCorrectElevator(elevator, fromFloor, -1))
+					if (callCorrectElevator(elevator, fromFloor, true))
 						return elevator;
 				}
 			}
@@ -81,7 +75,7 @@ public class Building extends AbstractBuilding {
 
 	/**
 	 * Adds randomness to the list being iterated, otherwise the first elevator
-	 * will always be returned if available somehow
+	 * will be returned more often.
 	 */
 	private synchronized void shuffleElevators() {
 		Collections.shuffle(elevators);
