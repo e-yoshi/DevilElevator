@@ -49,9 +49,10 @@ public class ElevatorFactory implements ThreadFactory {
 			while ((line = br.readLine()) != null) {
 				String[] params = line.split(SPLIT_AT);
 
-				if (params[0].startsWith("//"))
+				if (params[0].startsWith("//")) {
+					lineNum++;
 					continue;
-				else if (params[0].equals("floors"))
+				} else if (params[0].equals("floors"))
 					numFloors = Integer.parseInt(params[1]);
 				else if (params[0].equals("random?")) {
 					randPassengers = Boolean.parseBoolean(params[1]);
@@ -61,6 +62,7 @@ public class ElevatorFactory implements ThreadFactory {
 				} else if (params[0].equals("elevators")) {
 					numElevators = Integer.parseInt(params[1]);
 				} else if (isPassenger(lineNum)) {
+					System.out.println(params[0] + " " + params[1]);
 					addPassenger(lineNum, Integer.parseInt(params[0]),
 							Integer.parseInt(params[1]));
 				}
@@ -86,10 +88,16 @@ public class ElevatorFactory implements ThreadFactory {
 		// building only having
 		// positive floors, just a simple case for random generation
 		int minimum = 0;
-		int to = rand.nextInt((numFloors - minimum) + 1) + minimum;
-		int from = rand.nextInt((numFloors - minimum) + 1) + minimum;
 		for (int i = 0; i < numPassengers; i++) {
+			int from = -1;
+			int to = -1;
+			while (from == to) {
+				to = rand.nextInt(numFloors - minimum) + minimum;
+				from = rand.nextInt(numFloors - minimum) + minimum;
+			}
+
 			Passenger p = new Passenger(i, from, to);
+			System.out.println("ID: " + i + " from: " + from + " to: " + to);
 			passengerList.add(p);
 		}
 	}
@@ -107,8 +115,10 @@ public class ElevatorFactory implements ThreadFactory {
 
 	private boolean isPassenger(int lineNumber) {
 		// TODO: check to make sure this is not off by 1 index
-		return (!randPassengers && lineNumber > passIndex && lineNumber <= lineNumber
+
+		return (!randPassengers && lineNumber > passIndex && lineNumber <= passIndex
 				+ numPassengers);
+
 	}
 
 	@Override
