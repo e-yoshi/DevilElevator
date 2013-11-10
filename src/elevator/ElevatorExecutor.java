@@ -1,14 +1,11 @@
 package elevator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import util.EventFactory;
+import util.ElevatorFactory;
 
 public class ElevatorExecutor {
 	private static final String FILENAME = "elevatorEvents.csv";
-	private static EventFactory factory = null;
-	private static List<Thread> threadList = new ArrayList<Thread>();
+	private static ElevatorFactory factory = null;
 	private static List<Passenger> passengerList = new ArrayList<Passenger>();
 	private static List<Joker> jokerList = new ArrayList<Joker>();
 	
@@ -17,10 +14,12 @@ public class ElevatorExecutor {
 	
 	
 	public ElevatorExecutor(){
+		factory = new ElevatorFactory(FILENAME);
 		numFloors = factory.getNumFloors();
 		numElevators = factory.getNumElevators();
 		passengerList = factory.getPassengers();
 		jokerList = factory.getJokers();
+		execute();
 	}
 	
 	public static void execute() {

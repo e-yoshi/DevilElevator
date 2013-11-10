@@ -53,6 +53,5 @@ public class Main {
     }
     private static void startP2Part3(){
     	ElevatorExecutor ee = new ElevatorExecutor();
-    	ee.execute();
     }
 }
