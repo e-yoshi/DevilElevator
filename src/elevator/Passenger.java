@@ -49,7 +49,7 @@ public class Passenger implements Runnable {
 				try {
 					elevator.wait();
 				} catch (InterruptedException e) {
-					print("Interrupted!", Level.INFO);
+					print("Interrupted when waiting for elevator!", Level.WARNING);
 					return;
 				}
 			}
@@ -62,23 +62,17 @@ public class Passenger implements Runnable {
 			elevator.RequestFloor(destinationFloor);
 			print("Requested F:"+ destinationFloor +" E:" + elevator.getId(), Level.INFO);
 
+			//waiting for destination floor
 			while (elevator.getCurrentFloor() != destinationFloor) {
 				try {
 					elevator.wait();
 				} catch (InterruptedException e) {
-					MessageLogger.myLogger.log(Level.WARNING,
-							"Error waiting in Elevator at: " + elevator.getCurrentFloor());
-					System.out.println("Error waiting in elevator");
-					continue;
+					print("Interrupted in elevator!", Level.WARNING);
+					return;
 				}
 			}
 			elevator.Exit();
-			System.out.println("Passenger " + id + " exited elevator " + elevator.getId() + " on floor "
-					+ elevator.getCurrentFloor());
-
-			// TODO Log passenger exiting
-			MessageLogger.myLogger.log(Level.INFO, "Passenger " + id + " exited elevator " + elevator.getId()
-					+ " on floor " + elevator.getCurrentFloor());
+			print("Exited! E:"+elevator.getId()+" F:"+elevator.getCurrentFloor(), Level.INFO);
 		}
 		return;
 
