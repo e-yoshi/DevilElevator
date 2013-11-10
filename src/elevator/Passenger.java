@@ -30,21 +30,23 @@ public class Passenger implements Runnable {
 	public void run() {
 		AbstractElevator elevator = null;
 		print("Calling Elevator!", Level.INFO);
-		if (fromFloor < destinationFloor) {
-			elevator = building.CallUp(fromFloor);
-		} // TODO implement someone that comes and leaves from same floor
-		else if (fromFloor > destinationFloor) {
-			elevator = building.CallDown(fromFloor);
-		}
+		elevator = requestElevator(destinationFloor);
+		waitForElevator(elevator);
 		rideElevator(elevator);
 	}
 
-	private void rideElevator(AbstractElevator elevator) {
+	private AbstractElevator requestElevator(int destination) {
+		if (fromFloor < destination)
+			return building.CallUp(fromFloor);
+		else
+			return building.CallDown(fromFloor);
+	}
+
+	private void waitForElevator(AbstractElevator elevator) {
 		if (elevator == null) {
 			return;
 		}
 		synchronized (elevator) {
-			// waiting for the assigned elevator to come
 			while (elevator.getCurrentFloor() != fromFloor) {
 				try {
 					elevator.wait();
@@ -53,7 +55,14 @@ public class Passenger implements Runnable {
 					return;
 				}
 			}
+		}
+	}
 
+	private void rideElevator(AbstractElevator elevator) {
+		if (elevator == null) {
+			return;
+		}
+		synchronized (elevator) {
 			if (!elevator.Enter()) {
 				print("FULL! E:" + elevator.getId(), Level.INFO);
 				return;
@@ -61,7 +70,6 @@ public class Passenger implements Runnable {
 			print("Entered! E:" + elevator.getId(), Level.INFO);
 			elevator.RequestFloor(destinationFloor);
 			print("Requested F:" + destinationFloor + " E:" + elevator.getId(), Level.INFO);
-
 			// waiting for destination floor
 			while (elevator.getCurrentFloor() != destinationFloor) {
 				try {
@@ -74,8 +82,6 @@ public class Passenger implements Runnable {
 			elevator.Exit();
 			print("Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
 		}
-		return;
-
 	}
 
 	private void print(String message, Level level) {
