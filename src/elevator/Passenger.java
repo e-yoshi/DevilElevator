@@ -32,7 +32,10 @@ public class Passenger implements Runnable {
 		print("Calling Elevator!", Level.INFO);
 		elevator = requestElevator(destinationFloor);
 		waitForElevator(elevator);
-		rideElevator(elevator);
+		while(rideElevator(elevator)) {
+			elevator = requestElevator(destinationFloor);
+			waitForElevator(elevator);
+		}
 	}
 
 	private AbstractElevator requestElevator(int destination) {
@@ -58,14 +61,14 @@ public class Passenger implements Runnable {
 		}
 	}
 
-	private void rideElevator(AbstractElevator elevator) {
+	private boolean rideElevator(AbstractElevator elevator) {
 		if (elevator == null) {
-			return;
+			return false;
 		}
 		synchronized (elevator) {
 			if (!elevator.Enter()) {
 				print("FULL! E:" + elevator.getId(), Level.INFO);
-				return;
+				return true;
 			}
 			print("Entered! E:" + elevator.getId(), Level.INFO);
 			elevator.RequestFloor(destinationFloor);
@@ -76,12 +79,13 @@ public class Passenger implements Runnable {
 					elevator.wait();
 				} catch (InterruptedException e) {
 					print("Interrupted in elevator!", Level.WARNING);
-					return;
+					return true;
 				}
 			}
 			elevator.Exit();
 			print("Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
-		}
+			return true;
+		}	
 	}
 
 	private void print(String message, Level level) {
