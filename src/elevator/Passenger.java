@@ -60,9 +60,9 @@ public class Passenger implements Runnable {
 			}
 			print("Entered! E:" + elevator.getId(), Level.INFO);
 			elevator.RequestFloor(destinationFloor);
-			print("Requested F:"+ destinationFloor +" E:" + elevator.getId(), Level.INFO);
+			print("Requested F:" + destinationFloor + " E:" + elevator.getId(), Level.INFO);
 
-			//waiting for destination floor
+			// waiting for destination floor
 			while (elevator.getCurrentFloor() != destinationFloor) {
 				try {
 					elevator.wait();
@@ -72,16 +72,16 @@ public class Passenger implements Runnable {
 				}
 			}
 			elevator.Exit();
-			print("Exited! E:"+elevator.getId()+" F:"+elevator.getCurrentFloor(), Level.INFO);
+			print("Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
 		}
 		return;
 
 	}
 
 	private void print(String message, Level level) {
-		String prefix = "# P:" + id + " F:" + fromFloor + "->" + destinationFloor + "> " + message;
-		System.out.println(prefix);
-		MessageLogger.myLogger.log(level, prefix);
+		String prefix = "# P:" + id + " F:" + fromFloor + "->" + destinationFloor + "> ";
+		System.out.println(prefix + message);
+		MessageLogger.myLogger.log(level, prefix + message);
 	}
 
 }

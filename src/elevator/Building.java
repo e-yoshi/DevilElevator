@@ -24,11 +24,11 @@ public class Building extends AbstractBuilding {
 	}
 
 	// int 1 = up, int -1 = down
-	private AbstractElevator callCorrectElevator(Elevator elevator, int floorFrom, int upOrDown) {
+	private boolean callCorrectElevator(Elevator elevator, int floorFrom, int upOrDown) {
 
 		if (elevator.isIdle()) {
 			elevator.startElevator(floorFrom);
-			return elevator;
+			return true;
 		}
 
 		if (upOrDown < 0) {
@@ -36,17 +36,17 @@ public class Building extends AbstractBuilding {
 
 				elevator.callToFloor(floorFrom);
 
-				return elevator;
+				return true;
 			}
 		} else {
 			if ((elevator.isAscending() && elevator.getCurrentFloor() >= floorFrom)) {
 
 				elevator.callToFloor(floorFrom);
 
-				return elevator;
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	@Override
@@ -57,7 +57,8 @@ public class Building extends AbstractBuilding {
 				synchronized (elevator) {
 					if (elevator.getNumberOfPassengers() == maxOccupancy)
 						continue;
-					return callCorrectElevator(elevator, fromFloor, -1);
+					if (callCorrectElevator(elevator, fromFloor, -1))
+						return elevator;
 				}
 			}
 		}
@@ -71,7 +72,8 @@ public class Building extends AbstractBuilding {
 				synchronized (elevator) {
 					if (elevator.getNumberOfPassengers() == maxOccupancy)
 						continue;
-					return callCorrectElevator(elevator, fromFloor, 1);
+					if (callCorrectElevator(elevator, fromFloor, -1))
+						return elevator;
 				}
 			}
 		}

@@ -1,6 +1,8 @@
 package elevator;
 
+import java.awt.print.Printable;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import util.MessageLogger;
 import api.AbstractElevator;
@@ -21,7 +23,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	public void run() {
 		while (true) {
 			while (isIdle()) {
-				System.out.println("E:" + elevatorId + " F: " + currentFloor + "> Idling. No requests pending.");
+				print("Idling", Level.INFO);
 				synchronized (this) {
 					try {
 						this.wait();
@@ -38,8 +40,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void OpenDoors() {
-		System.out.println("E:" + elevatorId + " F: " + currentFloor + "> Opening doors!");
-		MessageLogger.myLogger.log(Level.INFO, "E:" + elevatorId + " F: " + currentFloor + "> Opening doors!");
+		print("Opening Doors!", Level.INFO);
 		while (floorsToVisit[currentFloor] != 0) {
 			synchronized (this) {
 				notifyAll();
@@ -50,8 +51,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void ClosedDoors() {
-		System.out.println("E:" + elevatorId + " F: " + currentFloor + "> Closing doors!");
-		MessageLogger.myLogger.log(Level.INFO, "E:" + elevatorId + " F: " + currentFloor + "> Closing doors!");
+		print("Closing doors!", Level.INFO);
 	}
 
 	@Override
@@ -63,8 +63,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 				currentFloor++;
 			}
 			if (floorsToVisit[currentFloor] != 0) {
-				System.out.println("E:" + getId() + " F: " + currentFloor + "> Stopped!");
-				MessageLogger.myLogger.log(Level.INFO, "E:" + getId() + " F: " + currentFloor + "> Stopped!");
+				print("Stopped!", Level.INFO);
 				OpenDoors();
 				ClosedDoors();
 			}
@@ -170,6 +169,12 @@ public class Elevator extends AbstractElevator implements Runnable {
 	 */
 	public int getNumberOfPassengers() {
 		return passengersRiding;
+	}
+
+	private void print(String message, Level level) {
+		String prefix = "E:" + elevatorId + " F:" + currentFloor + "> ";
+		System.out.println(prefix + message);
+		MessageLogger.myLogger.log(level, prefix + message);
 	}
 
 }

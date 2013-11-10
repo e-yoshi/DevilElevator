@@ -16,14 +16,15 @@ public class Main {
             // No options specified; make the default as the part 3 elevator
             // submission
             Random generator = new Random(34569);
-            int numFloors = 200;
+            int numFloors = 5;
+            int numPassengers = 5;
             int id = 0;
-            Building b = new Building(numFloors, 10);
-            for (int i = 0; i < 200; i++) {
+            Building b = new Building(numFloors, 2);
+            for (int i = 0; i < numPassengers; i++) {
                 int from = -1, to = -1;
                 while (from == to) {
-                    from = generator.nextInt(200);
-                    to = generator.nextInt(200);
+                    from = generator.nextInt(numFloors);
+                    to = generator.nextInt(numFloors);
                 }
                 
                 Passenger p = new Passenger(b, id,from,to);
