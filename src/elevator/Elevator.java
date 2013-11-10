@@ -10,7 +10,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	private int passengersRiding = 0;
 	private int[] floorsToVisit;
 	private boolean isAscending = true;
-	private int visit;
+	private int boundaryFloor;
 
 	public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold) {
 		super(numFloors, elevatorId, maxOccupancyThreshold);
@@ -19,21 +19,18 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void run() {
-
 		while (true) {
 			while (isIdle()) {
-				System.out.println("Elevator " + elevatorId
-						+ " does not have requests");
+				System.out.println("E:" + elevatorId + " F: " + currentFloor + "> Idling. No requests pending.");
 				synchronized (this) {
 					try {
 						this.wait();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						continue;
 					}
 				}
 			}
-			visit = isAscending ? numFloors - 1 : 0;
+			boundaryFloor = isAscending ? numFloors - 1 : 0;
 			VisitFloor();
 		}
 
@@ -41,8 +38,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void OpenDoors() {
-		System.out.println("Elevato " + elevatorId + " opening doors at floor "
-				+ currentFloor);
+		System.out.println("E" + elevatorId + " F: " + currentFloor + "> Opening doors!");
+		MessageLogger.myLogger.log(Level.INFO, "E" + elevatorId + " F: " + currentFloor + "> Opening doors!");
 		while (floorsToVisit[currentFloor] != 0) {
 			synchronized (this) {
 				notifyAll();
@@ -53,25 +50,21 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void ClosedDoors() {
-		System.out.println("Elevator " + elevatorId
-				+ " Closing doors from floor " + currentFloor);
-		// TODO Log this
-		MessageLogger.myLogger.log(Level.INFO, "Elevator " + elevatorId
-				+ " Closing doors from floor " + currentFloor);
+		System.out.println("E" + elevatorId + " F: " + currentFloor + "> Closing doors!");
+		MessageLogger.myLogger.log(Level.INFO, "E" + elevatorId + " F: " + currentFloor + "> Closing doors!");
 	}
 
 	@Override
 	public void VisitFloor() {
-		while (currentFloor != visit) {
+		while (currentFloor != boundaryFloor) {
 			if (!isAscending && currentFloor != 0) {
 				currentFloor--;
 			} else if (isAscending && currentFloor != numFloors - 1) {
 				currentFloor++;
 			}
-			// System.out.println("Elevator is on floor "+currentFloor);
 			if (floorsToVisit[currentFloor] != 0) {
-				System.out.println("Elevator " + getId() + " Stopped on floor "
-						+ currentFloor);
+				System.out.println("E" + getId() + " F: " + currentFloor + "> Stopped!");
+				MessageLogger.myLogger.log(Level.INFO, "E" + getId() + " F: " + currentFloor + "> Stopped!");
 
 				OpenDoors();
 				ClosedDoors();
@@ -85,7 +78,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	@Override
 	public synchronized boolean Enter() {
 		if (passengersRiding == maxOccupancyThreshold) {
-			checkThatItIsFullAndBeDisappointed();
+			checkIfThatIsFullAndBeDisappointed();
 			return false;
 		}
 
@@ -98,15 +91,15 @@ public class Elevator extends AbstractElevator implements Runnable {
 	public synchronized void Exit() {
 		passengersRiding--;
 		// No error check yet in case this is 0 already
-		floorsToVisit[currentFloor]--;
-
+		if (floorsToVisit[currentFloor] != 0)
+			floorsToVisit[currentFloor]--;
 	}
 
 	/**
 	 * Invoked by passenger when a full elevator arrives Frees the request for
 	 * the current floor without adding passengers
 	 */
-	private synchronized void checkThatItIsFullAndBeDisappointed() {
+	private synchronized void checkIfThatIsFullAndBeDisappointed() {
 		floorsToVisit[currentFloor]--;
 	}
 
@@ -149,7 +142,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	public synchronized void startElevator(int floor) {
 		floorsToVisit[floor]++;
 		isAscending = (currentFloor < floor) ? true : false;
-		visit = isAscending ? numFloors - 1 : 0;
+		boundaryFloor = isAscending ? numFloors - 1 : 0;
 
 		// Wake up idle thread
 

@@ -60,10 +60,9 @@ public class Passenger implements Runnable {
                      elevator.wait();   
                 }
                 catch (InterruptedException e) {
-                    // TODO Log error
                     System.out.println("Error waiting for elevator");
                     MessageLogger.myLogger.log(Level.WARNING,"Error waiting for elevator at floor: " + fromFloor);
-                    e.printStackTrace();
+                    continue;
                 }
             }
 
