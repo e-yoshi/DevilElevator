@@ -24,8 +24,7 @@ public class Building extends AbstractBuilding {
 	}
 
 	// int 1 = up, int -1 = down
-	private AbstractElevator callCorrectElevator(Elevator elevator,
-			int floorFrom, int upOrDown) {
+	private AbstractElevator callCorrectElevator(Elevator elevator, int floorFrom, int upOrDown) {
 
 		if (elevator.isIdle()) {
 			elevator.startElevator(floorFrom);
@@ -39,7 +38,7 @@ public class Building extends AbstractBuilding {
 
 				return elevator;
 			}
-		}else{
+		} else {
 			if ((elevator.isAscending() && elevator.getCurrentFloor() >= floorFrom)) {
 
 				elevator.callToFloor(floorFrom);
@@ -52,30 +51,30 @@ public class Building extends AbstractBuilding {
 
 	@Override
 	public AbstractElevator CallUp(int fromFloor) {
-		shuffleElevators();
-		for (Elevator elevator : elevators) {
-			synchronized (elevator) {
-				if (elevator.getNumberOfPassengers() == maxOccupancy)
-					continue;
-				// TODO make it look good
-				return callCorrectElevator(elevator, fromFloor, -1);
+		while (true) {
+			shuffleElevators();
+			for (Elevator elevator : elevators) {
+				synchronized (elevator) {
+					if (elevator.getNumberOfPassengers() == maxOccupancy)
+						continue;
+					return callCorrectElevator(elevator, fromFloor, -1);
+				}
 			}
 		}
-		return null;
 	}
 
 	@Override
 	public AbstractElevator CallDown(int fromFloor) {
-		shuffleElevators();
-		for (Elevator elevator : elevators) {
-			synchronized (elevator) {
-				if (elevator.getNumberOfPassengers() == maxOccupancy)
-					continue;
-				// TODO make it look good
-				return callCorrectElevator(elevator, fromFloor, 1);
+		while (true) {
+			shuffleElevators();
+			for (Elevator elevator : elevators) {
+				synchronized (elevator) {
+					if (elevator.getNumberOfPassengers() == maxOccupancy)
+						continue;
+					return callCorrectElevator(elevator, fromFloor, 1);
+				}
 			}
 		}
-		return null;
 	}
 
 	/**

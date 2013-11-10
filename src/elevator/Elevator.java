@@ -38,8 +38,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void OpenDoors() {
-		System.out.println("E" + elevatorId + " F: " + currentFloor + "> Opening doors!");
-		MessageLogger.myLogger.log(Level.INFO, "E" + elevatorId + " F: " + currentFloor + "> Opening doors!");
+		System.out.println("E:" + elevatorId + " F: " + currentFloor + "> Opening doors!");
+		MessageLogger.myLogger.log(Level.INFO, "E:" + elevatorId + " F: " + currentFloor + "> Opening doors!");
 		while (floorsToVisit[currentFloor] != 0) {
 			synchronized (this) {
 				notifyAll();
@@ -50,8 +50,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public void ClosedDoors() {
-		System.out.println("E" + elevatorId + " F: " + currentFloor + "> Closing doors!");
-		MessageLogger.myLogger.log(Level.INFO, "E" + elevatorId + " F: " + currentFloor + "> Closing doors!");
+		System.out.println("E:" + elevatorId + " F: " + currentFloor + "> Closing doors!");
+		MessageLogger.myLogger.log(Level.INFO, "E:" + elevatorId + " F: " + currentFloor + "> Closing doors!");
 	}
 
 	@Override
@@ -63,9 +63,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 				currentFloor++;
 			}
 			if (floorsToVisit[currentFloor] != 0) {
-				System.out.println("E" + getId() + " F: " + currentFloor + "> Stopped!");
-				MessageLogger.myLogger.log(Level.INFO, "E" + getId() + " F: " + currentFloor + "> Stopped!");
-
+				System.out.println("E:" + getId() + " F: " + currentFloor + "> Stopped!");
+				MessageLogger.myLogger.log(Level.INFO, "E:" + getId() + " F: " + currentFloor + "> Stopped!");
 				OpenDoors();
 				ClosedDoors();
 			}
@@ -90,7 +89,6 @@ public class Elevator extends AbstractElevator implements Runnable {
 	@Override
 	public synchronized void Exit() {
 		passengersRiding--;
-		// No error check yet in case this is 0 already
 		if (floorsToVisit[currentFloor] != 0)
 			floorsToVisit[currentFloor]--;
 	}
