@@ -3,6 +3,7 @@ import java.util.logging.Level;
 
 import simpleEventBarrier.SimpleEventExecutor;
 import elevator.Building;
+import elevator.ElevatorExecutor;
 import elevator.Passenger;
 import eventBarrier.EventExecutor;
 import util.MessageLogger;
@@ -51,22 +52,7 @@ public class Main {
     	
     }
     private static void startP2Part3(){
-    	Random generator = new Random(34569);
-        int numFloors = 5;
-        int numPassengers = 5;
-        int id = 0;
-        Building b = new Building(numFloors, 2);
-        for (int i = 0; i < numPassengers; i++) {
-            int from = -1, to = -1;
-            while (from == to) {
-                from = generator.nextInt(numFloors);
-                to = generator.nextInt(numFloors);
-            }
-            
-            Passenger p = new Passenger(b, id,from,to);
-            Thread t = new Thread(p,"Passenger "+id);
-            id++;
-            t.start();
-        }
+    	ElevatorExecutor ee = new ElevatorExecutor();
+    	ee.execute();
     }
 }

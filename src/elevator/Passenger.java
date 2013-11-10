@@ -25,6 +25,10 @@ public class Passenger implements Runnable {
 	public void setBuilding(Building b) {
 		building = b;
 	}
+	
+	public int getID(){
+		return id;
+	}
 
 	@Override
 	public void run() {
