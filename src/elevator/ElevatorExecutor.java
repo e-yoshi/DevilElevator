@@ -13,7 +13,14 @@ public class ElevatorExecutor {
 	private static int numElevators;
 	
 	
-	public ElevatorExecutor(){
+	public ElevatorExecutor(int partNumber){
+		if (partNumber == 1){
+			numElevators = 1;
+			//TODO: need some sort of statement saying elevators will be unbounded
+		} else if (partNumber ==2){
+			numElevators = 1;
+			//TODO: need some sort of statement saying elevators will be bounded
+		}
 		factory = new ElevatorFactory(FILENAME);
 		numFloors = factory.getNumFloors();
 		numElevators = factory.getNumElevators();
@@ -22,7 +29,7 @@ public class ElevatorExecutor {
 		execute();
 	}
 	
-	public static void execute() {
+	private static void execute() {
 		Building b = new Building(numFloors, numElevators);
 		
 		for (Passenger p : passengerList){
@@ -31,4 +38,6 @@ public class ElevatorExecutor {
 			t.start();
 		}
 	}
+	
+
 }

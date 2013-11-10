@@ -13,6 +13,7 @@ public class Building extends AbstractBuilding {
 	public Building(int numFloors, int numElevators) {
 		super(numFloors, numElevators);
 		maxOccupancy = 15;
+		//TODO: maybe change this to an input value from a csv
 		elevators = new ArrayList<Elevator>();
 
 		for (int i = 0; i < numElevators; i++) {
