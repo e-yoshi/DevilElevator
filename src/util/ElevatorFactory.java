@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadFactory;
+import java.util.logging.Level;
 
 import elevator.Joker;
 import elevator.Passenger;
@@ -28,6 +29,8 @@ public class ElevatorFactory implements ThreadFactory {
 	int numElevators = 5;
 	boolean randPassengers = false;
 	int passIndex = 3;
+	int jokersIndex = 10;
+	int numJokers = 1;
 
 	public ElevatorFactory(String filename) {
 		readFile(filename);
@@ -58,14 +61,23 @@ public class ElevatorFactory implements ThreadFactory {
 					randPassengers = Boolean.parseBoolean(params[1]);
 				} else if (params[0].equals("passengers")) {
 					numPassengers = Integer.parseInt(params[1]);
+					passIndex = lineNum;
 
 				} else if (params[0].equals("elevators")) {
 					numElevators = Integer.parseInt(params[1]);
+				} else if (params[0].equals("jokers")){
+					numJokers = Integer.parseInt(params[1]);
 				} else if (isPassenger(lineNum)) {
 					System.out.println(params[0] + " " + params[1]);
 					addPassenger(lineNum, Integer.parseInt(params[0]),
 							Integer.parseInt(params[1]));
+				} else if (isJoker(lineNum)){
+					addJoker(lineNum, Integer.parseInt(params[0]),
+							Integer.parseInt(params[1]), Integer.parseInt(params[2]), Boolean.parseBoolean(params[3]), Boolean.parseBoolean(params[4]), Boolean.parseBoolean(params[5]));
 				}
+				
+				
+				
 				lineNum++;
 			}
 
@@ -73,7 +85,7 @@ public class ElevatorFactory implements ThreadFactory {
 				addRandomPassengers();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			//  Auto-generated catch block
 			e.printStackTrace();
 			System.out
 					.println("An IO exeption ocurred while reading a line in the file.");
@@ -81,10 +93,20 @@ public class ElevatorFactory implements ThreadFactory {
 		}
 
 	}
+	
+	private void addJoker(int lineNumber, int from, int to, int exitAt, boolean wrongFloor, boolean wait, boolean request){
+		Joker j = new Joker(lineNumber - jokersIndex, from, to, exitAt, wrongFloor, wait, request);
+		jokerList.add(j);
+	}
+	
+	private boolean isJoker(int lineNumber) {
+		return (lineNumber > jokersIndex && lineNumber <= jokersIndex
+				+ numJokers);
+	}
 
 	private void addRandomPassengers() {
 		Random rand = new Random();
-		// just defining ground floor as 0. No realy difference between a
+		// just defining ground floor as 0. No really difference between a
 		// building only having
 		// positive floors, just a simple case for random generation
 		int minimum = 0;
@@ -97,28 +119,22 @@ public class ElevatorFactory implements ThreadFactory {
 			}
 
 			Passenger p = new Passenger(i, from, to);
-			System.out.println("ID: " + i + " from: " + from + " to: " + to);
+			// MessageLogger.myLogger.log(Level.INFO,("ID: " + i + " from: " +
+			// from + " to: " + to));
 			passengerList.add(p);
 		}
 	}
 
-	private void addPassenger(int lineNumber, int to, int from) {
+	private void addPassenger(int lineNumber, int from, int to) {
 		// id = lineNumber - lineNumber of passengers declaration
-		// TODO: does some sort of concurrency control need to be implemented.
-		// Probably not because only 1 thead is running at this point and it
-		// will stay that way
-		// until all of these have defined state
 		Passenger p = new Passenger(lineNumber - passIndex, to, from);
 		passengerList.add(p);
 
 	}
 
 	private boolean isPassenger(int lineNumber) {
-		// TODO: check to make sure this is not off by 1 index
-
 		return (!randPassengers && lineNumber > passIndex && lineNumber <= passIndex
 				+ numPassengers);
-
 	}
 
 	@Override
