@@ -80,11 +80,12 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public synchronized boolean Enter() {
-		if (passengersRiding == maxOccupancyThreshold) {
-			checkIfThatIsFullAndBeDisappointed();
-			return false;
+		if (maxOccupancyThreshold < 0) {
+			if (passengersRiding == maxOccupancyThreshold) {
+				checkIfThatIsFullAndBeDisappointed();
+				return false;
+			}
 		}
-
 		passengersRiding++;
 		floorsToVisit[currentFloor]--;
 		notifyAll();
@@ -100,7 +101,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	}
 
 	public synchronized boolean jokerExit(int floor) {
-		if(this.getCurrentFloor() == floor) {
+		if (this.getCurrentFloor() == floor) {
 			passengersRiding--;
 			if (floorsToVisit[currentFloor] != 0)
 				floorsToVisit[currentFloor]--;
@@ -109,8 +110,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 		}
 		return false;
 	}
-	
-	
+
 	/**
 	 * Invoked by passenger when a full elevator arrives Frees the request for
 	 * the current floor without adding passengers
