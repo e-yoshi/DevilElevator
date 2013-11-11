@@ -67,11 +67,12 @@ public class Joker extends Passenger {
 				}
 			}
 
-			while (elevator.jokerExit(wrongFloor)) {
+			if (elevator.jokerExit(wrongFloor)) {
 				print("Joker Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
+			} else {
+				return false;
 			}
 			return true;
 		}
 	}
-
 }
