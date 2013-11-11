@@ -30,7 +30,7 @@ public class Joker extends Passenger {
 				waitForElevator(elevator);
 		}
 	}
-	
+
 	@Override
 	protected boolean rideElevator(AbstractElevator elevator) {
 		if (elevator == null) {
@@ -42,7 +42,9 @@ public class Joker extends Passenger {
 				return true;
 			}
 			print("Entered! E:" + elevator.getId(), Level.INFO);
-			elevator.RequestFloor(destinationFloor);
+			if (!noRequest) {
+				elevator.RequestFloor(destinationFloor);
+			}
 			print("Requested F:" + destinationFloor + " E:" + elevator.getId(), Level.INFO);
 			// waiting for destination floor
 			while (elevator.getCurrentFloor() != destinationFloor) {
@@ -53,19 +55,16 @@ public class Joker extends Passenger {
 					return true;
 				}
 			}
-			
-			if(elevator.getCurrentFloor() != wrongFloor) {
+
+			if (elevator.getCurrentFloor() != wrongFloor) {
 				elevator.Exit();
 			}
-				
-			
+
 			notifyAll();
-		
+
 			print("Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
 			return true;
-		}	
+		}
 	}
-	
-	
 
 }
