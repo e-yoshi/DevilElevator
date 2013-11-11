@@ -10,9 +10,8 @@ public class Building extends AbstractBuilding {
 	private ArrayList<Elevator> elevators;
 	private int maxOccupancy;
 
-	public Building(int numFloors, int numElevators) {
+	public Building(int numFloors, int numElevators, int maxOccupancy) {
 		super(numFloors, numElevators);
-		maxOccupancy = 15;
 		//TODO: maybe change this to an input value from a csv
 		elevators = new ArrayList<Elevator>();
 
