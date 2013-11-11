@@ -16,6 +16,17 @@ public class Joker extends Passenger {
 		this.wrongFloor = wrongFloor;
 		this.noRequest = noRequest;
 	}
+	
+	public Joker(int id, int from, int dest, int wrongFloor, boolean waitElevator, boolean noRequest) {
+		super(id, from, dest);
+		this.waitElevator = waitElevator;
+		this.wrongFloor = wrongFloor;
+		this.noRequest = noRequest;
+	}
+	
+	public void setBuilding(Building b) {
+		super.setBuilding(b);
+	}
 
 	@Override
 	public void run() {

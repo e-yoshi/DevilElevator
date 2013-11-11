@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadFactory;
-import java.util.logging.Level;
 
 import elevator.Joker;
 import elevator.Passenger;
@@ -65,19 +64,22 @@ public class ElevatorFactory implements ThreadFactory {
 
 				} else if (params[0].equals("elevators")) {
 					numElevators = Integer.parseInt(params[1]);
-				} else if (params[0].equals("jokers")){
+				} else if (params[0].equals("jokers")) {
 					numJokers = Integer.parseInt(params[1]);
 				} else if (isPassenger(lineNum)) {
 					System.out.println(params[0] + " " + params[1]);
 					addPassenger(lineNum, Integer.parseInt(params[0]),
 							Integer.parseInt(params[1]));
-				} else if (isJoker(lineNum)){
+				} else if (isJoker(lineNum)) {
+					// public Joker(int id, int from, int dest, int wrongFloor,
+					// boolean waitElevator, boolean noRequest)
 					addJoker(lineNum, Integer.parseInt(params[0]),
-							Integer.parseInt(params[1]), Integer.parseInt(params[2]), Boolean.parseBoolean(params[3]), Boolean.parseBoolean(params[4]), Boolean.parseBoolean(params[5]));
+							Integer.parseInt(params[1]),
+							Integer.parseInt(params[2]),
+							Boolean.parseBoolean(params[3]),
+							Boolean.parseBoolean(params[4]));
 				}
-				
-				
-				
+
 				lineNum++;
 			}
 
@@ -85,7 +87,7 @@ public class ElevatorFactory implements ThreadFactory {
 				addRandomPassengers();
 			}
 		} catch (IOException e) {
-			//  Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 			System.out
 					.println("An IO exeption ocurred while reading a line in the file.");
@@ -93,12 +95,16 @@ public class ElevatorFactory implements ThreadFactory {
 		}
 
 	}
-	
-	private void addJoker(int lineNumber, int from, int to, int exitAt, boolean wrongFloor, boolean wait, boolean request){
-		Joker j = new Joker(lineNumber - jokersIndex, from, to, exitAt, wrongFloor, wait, request);
+
+	private void addJoker(int lineNumber, int from, int to, int wrongFloor,
+			boolean wait, boolean request) {
+		// public Joker(int id, int from, int dest, int wrongFloor, boolean
+		// waitElevator, boolean noRequest)
+		Joker j = new Joker(lineNumber - jokersIndex, from, to, wrongFloor,
+				wait, request);
 		jokerList.add(j);
 	}
-	
+
 	private boolean isJoker(int lineNumber) {
 		return (lineNumber > jokersIndex && lineNumber <= jokersIndex
 				+ numJokers);
