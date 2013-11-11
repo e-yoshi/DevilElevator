@@ -31,8 +31,8 @@ public class Joker extends Passenger {
 		}
 	}
 
-	@Override
-	protected boolean rideElevator(AbstractElevator elevator) {
+	
+	protected boolean rideElevator(Elevator elevator) {
 		if (elevator == null) {
 			return false;
 		}
@@ -56,13 +56,9 @@ public class Joker extends Passenger {
 				}
 			}
 
-			if (elevator.getCurrentFloor() != wrongFloor) {
-				elevator.Exit();
+			while (elevator.jokerExit(wrongFloor)) {
+				print("Joker Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
 			}
-
-			notifyAll();
-
-			print("Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
 			return true;
 		}
 	}

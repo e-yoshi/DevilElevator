@@ -99,6 +99,18 @@ public class Elevator extends AbstractElevator implements Runnable {
 		notifyAll();
 	}
 
+	public synchronized boolean jokerExit(int floor) {
+		if(this.getCurrentFloor() == floor) {
+			passengersRiding--;
+			if (floorsToVisit[currentFloor] != 0)
+				floorsToVisit[currentFloor]--;
+			notifyAll();
+			return true;
+		}
+		return false;
+	}
+	
+	
 	/**
 	 * Invoked by passenger when a full elevator arrives Frees the request for
 	 * the current floor without adding passengers
