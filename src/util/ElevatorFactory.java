@@ -67,7 +67,6 @@ public class ElevatorFactory implements ThreadFactory {
 				} else if (params[0].equals("jokers")) {
 					numJokers = Integer.parseInt(params[1]);
 				} else if (isPassenger(lineNum)) {
-					System.out.println(params[0] + " " + params[1]);
 					addPassenger(lineNum, Integer.parseInt(params[0]),
 							Integer.parseInt(params[1]));
 				} else if (isJoker(lineNum)) {
