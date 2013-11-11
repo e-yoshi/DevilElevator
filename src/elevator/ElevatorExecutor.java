@@ -13,6 +13,8 @@ public class ElevatorExecutor {
 	private static int numFloors;
 	private static int numElevators;
 
+	private Building building = null;
+
 	public ElevatorExecutor(int partNumber) {
 		factory = new ElevatorFactory(FILENAME);
 		numFloors = factory.getNumFloors();
@@ -29,14 +31,16 @@ public class ElevatorExecutor {
 			// TODO: need some sort of statement saying elevators will be
 			// bounded
 		}
+
+		building = new Building(numFloors, numElevators);
+
 		execute();
 	}
 
 	private static void execute() {
-		Building b = new Building(numFloors, numElevators);
 
 		for (Passenger p : passengerList) {
-			p.setBuilding(b);
+			p.setBuilding(building);
 			Thread t = new Thread(p, "Passenger " + p.getID());
 			t.start();
 		}
