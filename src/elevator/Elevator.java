@@ -13,10 +13,12 @@ public class Elevator extends AbstractElevator implements Runnable {
 	private int[] floorsToVisit;
 	private boolean isAscending = true;
 	private int boundaryFloor;
+	private int doorTimeout = 0;
 
-	public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold) {
+	public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold, int doorTimeout) {
 		super(numFloors, elevatorId, maxOccupancyThreshold);
 		floorsToVisit = new int[numFloors];
+		this.doorTimeout = doorTimeout;
 	}
 
 	@Override
@@ -39,14 +41,17 @@ public class Elevator extends AbstractElevator implements Runnable {
 	}
 
 	@Override
-	public void OpenDoors() {
+	public synchronized void OpenDoors() {
 		print("Opening Doors!", Level.INFO);
+
+		notifyAll();
 		while (floorsToVisit[currentFloor] != 0) {
-			synchronized (this) {
-				notifyAll();
+			try {
+				wait(doorTimeout);
+			} catch (InterruptedException e) {
+				continue;
 			}
 		}
-
 	}
 
 	@Override
@@ -82,6 +87,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 		passengersRiding++;
 		floorsToVisit[currentFloor]--;
+		notifyAll();
 		return true;
 	}
 
@@ -90,6 +96,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 		passengersRiding--;
 		if (floorsToVisit[currentFloor] != 0)
 			floorsToVisit[currentFloor]--;
+		notifyAll();
 	}
 
 	/**
@@ -120,6 +127,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 	 *            the floor a passenger is waiting
 	 */
 	public synchronized void callToFloor(int floor) {
+		if (floor > numFloors)
+			return;
 		floorsToVisit[floor]++;
 		try {
 			this.wait();
@@ -137,6 +146,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 	 *            the floor a passenger is waiting
 	 */
 	public synchronized void startElevator(int floor) {
+		if (floor > numFloors)
+			return;
 		floorsToVisit[floor]++;
 		isAscending = (currentFloor < floor) ? true : false;
 		boundaryFloor = isAscending ? numFloors - 1 : 0;

@@ -6,10 +6,10 @@ import api.AbstractElevator;
 import util.MessageLogger;
 
 public class Passenger implements Runnable {
-	private int id;
-	private int destinationFloor;
-	private int fromFloor;
-	private Building building;
+	protected int id;
+	protected int destinationFloor;
+	protected int fromFloor;
+	protected Building building;
 
 	public Passenger(int id, int from, int dest) {
 		this.id = id;
@@ -25,6 +25,10 @@ public class Passenger implements Runnable {
 	public void setBuilding(Building b) {
 		building = b;
 	}
+	
+	public int getID(){
+		return id;
+	}
 
 	@Override
 	public void run() {
@@ -32,20 +36,20 @@ public class Passenger implements Runnable {
 		print("Calling Elevator!", Level.INFO);
 		elevator = requestElevator(destinationFloor);
 		waitForElevator(elevator);
-		while(rideElevator(elevator)) {
+		while(!rideElevator(elevator)) {
 			elevator = requestElevator(destinationFloor);
 			waitForElevator(elevator);
 		}
 	}
 
-	private AbstractElevator requestElevator(int destination) {
+	protected AbstractElevator requestElevator(int destination) {
 		if (fromFloor < destination)
 			return building.CallUp(fromFloor);
 		else
 			return building.CallDown(fromFloor);
 	}
 
-	private void waitForElevator(AbstractElevator elevator) {
+	protected void waitForElevator(AbstractElevator elevator) {
 		if (elevator == null) {
 			return;
 		}
@@ -61,7 +65,7 @@ public class Passenger implements Runnable {
 		}
 	}
 
-	private boolean rideElevator(AbstractElevator elevator) {
+	protected boolean rideElevator(AbstractElevator elevator) {
 		if (elevator == null) {
 			return false;
 		}
@@ -88,7 +92,7 @@ public class Passenger implements Runnable {
 		}	
 	}
 
-	private void print(String message, Level level) {
+	protected void print(String message, Level level) {
 		String prefix = "# P:" + id + " F:" + fromFloor + "->" + destinationFloor + "> ";
 		System.out.println(prefix + message);
 		MessageLogger.myLogger.log(level, prefix + message);

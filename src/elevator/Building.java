@@ -13,10 +13,11 @@ public class Building extends AbstractBuilding {
 	public Building(int numFloors, int numElevators) {
 		super(numFloors, numElevators);
 		maxOccupancy = 15;
+		//TODO: maybe change this to an input value from a csv
 		elevators = new ArrayList<Elevator>();
 
 		for (int i = 0; i < numElevators; i++) {
-			Elevator elevatorService = new Elevator(numFloors, i, maxOccupancy);
+			Elevator elevatorService = new Elevator(numFloors, i, maxOccupancy,1000);
 			elevators.add(elevatorService);
 			Thread t = new Thread(elevatorService, "Elevator " + i);
 			t.start();
