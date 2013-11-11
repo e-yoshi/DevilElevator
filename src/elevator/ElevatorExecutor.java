@@ -47,11 +47,11 @@ public class ElevatorExecutor {
 			t.start();
 		}
 		
-//		for (Joker j: jokerList) {
-//			j.setBuilding(building);
-//			Thread t = new Thread(j, "Joker " + j.getID());
-//			t.start();
-//		}
+		for (Joker j: jokerList) {
+			j.setBuilding(building);
+			Thread t = new Thread(j, "Joker " + j.getID());
+			t.start();
+		}
 	}
 
 }

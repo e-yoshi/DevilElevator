@@ -36,7 +36,7 @@ public class Joker extends Passenger {
 		if (waitElevator)
 			waitForElevator(elevator);
 		while (!rideElevator(elevator)) {
-			elevator = requestElevator(destinationFloor);
+			elevator = this.requestElevator(destinationFloor);
 			if (waitElevator)
 				waitForElevator(elevator);
 		}
