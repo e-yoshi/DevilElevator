@@ -67,6 +67,7 @@ public class ElevatorFactory implements ThreadFactory {
 				} else if (params[0].equals("jokers")) {
 					numJokers = Integer.parseInt(params[1]);
 				} else if (isPassenger(lineNum)) {
+//					System.out.println(params[0] + " "+ params[1]);
 					addPassenger(lineNum, Integer.parseInt(params[0]),
 							Integer.parseInt(params[1]));
 				} else if (isJoker(lineNum)) {
@@ -132,7 +133,7 @@ public class ElevatorFactory implements ThreadFactory {
 
 	private void addPassenger(int lineNumber, int from, int to) {
 		// id = lineNumber - lineNumber of passengers declaration
-		Passenger p = new Passenger(lineNumber - passIndex, to, from);
+		Passenger p = new Passenger(lineNumber - passIndex, from, to);
 		passengerList.add(p);
 
 	}
