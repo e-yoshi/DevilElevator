@@ -2,6 +2,8 @@ package elevator;
 
 import java.util.logging.Level;
 
+import util.MessageLogger;
+
 import api.AbstractElevator;
 
 public class Joker extends Passenger {
@@ -30,20 +32,18 @@ public class Joker extends Passenger {
 
 	@Override
 	public void run() {
-		AbstractElevator elevator = null;
+		Elevator elevator = null;
 		print("Calling Elevator!", Level.INFO);
-		elevator = requestElevator(super.destinationFloor);
+		elevator = (Elevator)requestElevator(super.destinationFloor);
 		if (waitElevator)
 			waitForElevator(elevator);
-		while (!rideElevator(elevator)) {
-			elevator = this.requestElevator(destinationFloor);
+		while (!rideJokerElevator(elevator)) {
+			elevator = (Elevator)requestElevator(super.destinationFloor);
 			if (waitElevator)
 				waitForElevator(elevator);
 		}
 	}
-
-	
-	protected boolean rideElevator(Elevator elevator) {
+	protected boolean rideJokerElevator(Elevator elevator) {
 		if (elevator == null) {
 			return false;
 		}
@@ -58,7 +58,7 @@ public class Joker extends Passenger {
 			}
 			print("Requested F:" + destinationFloor + " E:" + elevator.getId(), Level.INFO);
 			// waiting for destination floor
-			while (elevator.getCurrentFloor() != destinationFloor) {
+			while (elevator.getCurrentFloor() != wrongFloor || elevator.getCurrentFloor() != destinationFloor) {
 				try {
 					elevator.wait();
 				} catch (InterruptedException e) {
@@ -70,9 +70,18 @@ public class Joker extends Passenger {
 			if (elevator.jokerExit(wrongFloor)) {
 				print("Joker Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
 			} else {
+				print("Joker Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
+
 				return false;
 			}
 			return true;
 		}
+	}
+	
+	@Override
+	protected void print(String message, Level level) {
+		String prefix = "# J:" + id + " F:" + fromFloor + "->" + destinationFloor + "> ";
+		System.out.println(prefix + message);
+		MessageLogger.myLogger.log(level, prefix + message);
 	}
 }

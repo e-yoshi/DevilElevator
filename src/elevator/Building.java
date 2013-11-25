@@ -16,11 +16,12 @@ public class Building extends AbstractBuilding {
 		elevators = new ArrayList<Elevator>();
 
 		for (int i = 0; i < numElevators; i++) {
-			Elevator elevatorService = new Elevator(numFloors, i, maxOccupancy, 1000);
+			Elevator elevatorService = new Elevator(numFloors, i, maxOccupancy, 5000);
 			elevators.add(elevatorService);
 			Thread t = new Thread(elevatorService, "Elevator " + i);
 			t.start();
 		}
+		this.maxOccupancy = maxOccupancy; 
 	}
 
 	// int 1 = up, int -1 = down
@@ -46,13 +47,14 @@ public class Building extends AbstractBuilding {
 	@Override
 	public AbstractElevator CallUp(int fromFloor) {
 		while (true) {
-			shuffleElevators();
 			for (Elevator elevator : elevators) {
 				synchronized (elevator) {
-					if (maxOccupancy > 0 && elevator.getNumberOfPassengers() == maxOccupancy)
+					if (maxOccupancy > 0 && elevator.getNumberOfPassengers() >= maxOccupancy)
 						continue;
-					if (callCorrectElevator(elevator, fromFloor, false))
+					if (callCorrectElevator(elevator, fromFloor, false)) {
+						shuffleElevators();
 						return elevator;
+					}
 				}
 			}
 		}
@@ -64,7 +66,7 @@ public class Building extends AbstractBuilding {
 			shuffleElevators();
 			for (Elevator elevator : elevators) {
 				synchronized (elevator) {
-					if (elevator.getNumberOfPassengers() == maxOccupancy)
+					if (maxOccupancy > 0 && elevator.getNumberOfPassengers() >= maxOccupancy)
 						continue;
 					if (callCorrectElevator(elevator, fromFloor, true))
 						return elevator;

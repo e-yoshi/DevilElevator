@@ -142,12 +142,13 @@ public class Elevator extends AbstractElevator implements Runnable {
 		if (floor > numFloors)
 			return;
 		floorsToVisit[floor]++;
+		/*
 		try {
 			this.wait();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**
@@ -167,13 +168,13 @@ public class Elevator extends AbstractElevator implements Runnable {
 		// Wake up idle thread
 
 		this.notifyAll();
-
+/*
 		try {
 			this.wait();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**
