@@ -56,7 +56,8 @@ public class Passenger implements Runnable {
 		synchronized (elevator) {
 			while (elevator.getCurrentFloor() != fromFloor) {
 				try {
-					elevator.wait();
+					elevator.wait(50);
+					elevator.notifyAll();
 				} catch (InterruptedException e) {
 					print("Interrupted when waiting for elevator!", Level.WARNING);
 					return;
@@ -79,6 +80,7 @@ public class Passenger implements Runnable {
 			print("Requested F:" + destinationFloor + " E:" + elevator.getId(), Level.INFO);
 			// waiting for destination floor
 			while (elevator.getCurrentFloor() != destinationFloor) {
+				elevator.notifyAll();
 				try {
 					elevator.wait();
 				} catch (InterruptedException e) {

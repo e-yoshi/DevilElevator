@@ -1,9 +1,6 @@
 package elevator;
 
-import java.awt.print.Printable;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import util.MessageLogger;
 import api.AbstractElevator;
 
@@ -11,7 +8,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	private int passengersRiding = 0;
 	private int[] floorsToVisit;
-	private boolean isAscending = true;
+	private volatile boolean isAscending = true;
 	private int boundaryFloor;
 	private int doorTimeout = 0;
 
@@ -28,9 +25,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 				print("Idling", Level.INFO);
 				synchronized (this) {
 					try {
+						print("waiting____________", Level.INFO);
 						this.wait();
 					} catch (InterruptedException e) {
-						continue;
+						return;
 					}
 				}
 			}
@@ -43,9 +41,9 @@ public class Elevator extends AbstractElevator implements Runnable {
 	@Override
 	public synchronized void OpenDoors() {
 		print("Opening Doors!", Level.INFO);
-
-		notifyAll();
+		notifyAll(); // Notify that arrived at floor.
 		while (floorsToVisit[currentFloor] != 0) {
+			notifyAll(); // Notify that door opened
 			try {
 				wait(doorTimeout);
 			} catch (InterruptedException e) {
@@ -75,7 +73,6 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 		}
 		isAscending = !isAscending;
-
 	}
 
 	@Override
@@ -103,8 +100,6 @@ public class Elevator extends AbstractElevator implements Runnable {
 	public synchronized boolean jokerExit(int floor) {
 		if (this.getCurrentFloor() == floor) {
 			passengersRiding--;
-			if (floorsToVisit[currentFloor] != 0)
-				floorsToVisit[currentFloor]--;
 			notifyAll();
 			return true;
 		}
@@ -121,7 +116,10 @@ public class Elevator extends AbstractElevator implements Runnable {
 
 	@Override
 	public synchronized void RequestFloor(int floor) {
+		if (floor > numFloors)
+			return;
 		floorsToVisit[floor]++;
+		this.notifyAll();
 	}
 
 	/**
@@ -139,16 +137,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 	 *            the floor a passenger is waiting
 	 */
 	public synchronized void callToFloor(int floor) {
-		if (floor > numFloors)
-			return;
-		floorsToVisit[floor]++;
-		/*
-		try {
-			this.wait();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		RequestFloor(floor);
 	}
 
 	/**
@@ -164,23 +153,14 @@ public class Elevator extends AbstractElevator implements Runnable {
 		floorsToVisit[floor]++;
 		isAscending = (currentFloor < floor) ? true : false;
 		boundaryFloor = isAscending ? numFloors - 1 : 0;
-
-		// Wake up idle thread
-
-		this.notifyAll();
-/*
-		try {
-			this.wait();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		print("Started!", Level.INFO);
+		this.notifyAll(); // Wake up elevator from idle
 	}
 
 	/**
 	 * Checks if this elevator has to stop in any floor
 	 */
-	public boolean isIdle() {
+	public synchronized boolean isIdle() {
 		for (int i : floorsToVisit) {
 			if (i > 0)
 				return false;

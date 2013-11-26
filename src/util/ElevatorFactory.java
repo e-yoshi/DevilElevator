@@ -102,7 +102,7 @@ public class ElevatorFactory implements ThreadFactory {
 		// waitElevator, boolean noRequest)
 		Joker j = new Joker(lineNumber - jokersIndex, from, to, wrongFloor,
 				wait, request);
-		jokerList.add(j);
+		//jokerList.add(j);
 	}
 
 	private boolean isJoker(int lineNumber) {

@@ -12,7 +12,6 @@ public class Building extends AbstractBuilding {
 
 	public Building(int numFloors, int numElevators, int maxOccupancy) {
 		super(numFloors, numElevators);
-		// TODO: maybe change this to an input value from a csv
 		elevators = new ArrayList<Elevator>();
 
 		for (int i = 0; i < numElevators; i++) {
@@ -24,35 +23,20 @@ public class Building extends AbstractBuilding {
 		this.maxOccupancy = maxOccupancy; 
 	}
 
-	// int 1 = up, int -1 = down
-	private boolean callCorrectElevator(Elevator elevator, int floorFrom, boolean up) {
-		if (elevator.isIdle()) {
-			elevator.startElevator(floorFrom);
-			return true;
-		}
-		if (!up) {
-			if ((elevator.isAscending() && elevator.getCurrentFloor() <= floorFrom)) {
-				elevator.callToFloor(floorFrom);
-				return true;
-			}
-		} else {
-			if ((elevator.isAscending() && elevator.getCurrentFloor() >= floorFrom)) {
-				elevator.callToFloor(floorFrom);
-				return true;
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public AbstractElevator CallUp(int fromFloor) {
 		while (true) {
+			shuffleElevators();
 			for (Elevator elevator : elevators) {
 				synchronized (elevator) {
 					if (maxOccupancy > 0 && elevator.getNumberOfPassengers() >= maxOccupancy)
 						continue;
-					if (callCorrectElevator(elevator, fromFloor, false)) {
-						shuffleElevators();
+					if (elevator.isIdle()) {
+						elevator.startElevator(fromFloor);
+						return elevator;
+					}
+					if ((elevator.isAscending() && elevator.getCurrentFloor() <= fromFloor)) {
+						elevator.callToFloor(fromFloor);
 						return elevator;
 					}
 				}
@@ -68,8 +52,14 @@ public class Building extends AbstractBuilding {
 				synchronized (elevator) {
 					if (maxOccupancy > 0 && elevator.getNumberOfPassengers() >= maxOccupancy)
 						continue;
-					if (callCorrectElevator(elevator, fromFloor, true))
+					if (elevator.isIdle()) {
+						elevator.startElevator(fromFloor);
 						return elevator;
+					}
+					if ((!elevator.isAscending() && elevator.getCurrentFloor() >= fromFloor)) {
+						elevator.RequestFloor(fromFloor);
+						return elevator;
+					}
 				}
 			}
 		}
