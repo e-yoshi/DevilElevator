@@ -22,10 +22,9 @@ public class Elevator extends AbstractElevator implements Runnable {
 	public void run() {
 		while (true) {
 			while (isIdle()) {
-				print("Idling", Level.INFO);
 				synchronized (this) {
 					try {
-						print("waiting____________", Level.INFO);
+						print("Idle____________", Level.INFO);
 						this.wait();
 					} catch (InterruptedException e) {
 						return;
