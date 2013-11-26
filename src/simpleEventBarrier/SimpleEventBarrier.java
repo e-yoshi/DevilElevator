@@ -43,7 +43,7 @@ public class SimpleEventBarrier extends AbstractEventBarrier {
 	@Override
 	public synchronized void complete() {
 		waiters--;
-		if(waiters == 0)
+		if (waiters == 0)
 			notifyAll();
 	}
 

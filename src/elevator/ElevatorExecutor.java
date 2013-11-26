@@ -2,6 +2,7 @@ package elevator;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import util.ElevatorFactory;
 
 public class ElevatorExecutor {
@@ -46,8 +47,8 @@ public class ElevatorExecutor {
 			Thread t = new Thread(p, "Passenger " + p.getID());
 			t.start();
 		}
-		
-		for (Joker j: jokerList) {
+
+		for (Joker j : jokerList) {
 			j.setBuilding(building);
 			Thread t = new Thread(j, "Joker " + j.getID());
 			t.start();

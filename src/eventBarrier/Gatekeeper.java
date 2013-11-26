@@ -1,9 +1,8 @@
 package eventBarrier;
 
-public class Gatekeeper implements Runnable{
+public class Gatekeeper implements Runnable {
 	private EventBarrier barrier = null;
 
-	
 	@Override
 	public void run() {
 		while (!barrier.isFinished()) {

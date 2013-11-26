@@ -1,6 +1,7 @@
 package elevator;
 
 import java.util.logging.Level;
+
 import util.MessageLogger;
 import api.AbstractElevator;
 
@@ -22,10 +23,9 @@ public class Elevator extends AbstractElevator implements Runnable {
 	public void run() {
 		while (true) {
 			while (isIdle()) {
-				print("Idling", Level.INFO);
 				synchronized (this) {
 					try {
-						print("waiting____________", Level.INFO);
+						print("Idling", Level.INFO);
 						this.wait();
 					} catch (InterruptedException e) {
 						return;
@@ -49,6 +49,7 @@ public class Elevator extends AbstractElevator implements Runnable {
 			} catch (InterruptedException e) {
 				continue;
 			}
+			floorsToVisit[currentFloor] = 0;
 		}
 	}
 
@@ -84,8 +85,8 @@ public class Elevator extends AbstractElevator implements Runnable {
 			}
 		}
 		passengersRiding++;
-		floorsToVisit[currentFloor]--;
-		notifyAll();
+		if (floorsToVisit[currentFloor] != 0)
+			floorsToVisit[currentFloor]--;
 		return true;
 	}
 

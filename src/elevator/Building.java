@@ -2,7 +2,7 @@ package elevator;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import elevator.Elevator;
+
 import api.AbstractBuilding;
 import api.AbstractElevator;
 
@@ -20,7 +20,7 @@ public class Building extends AbstractBuilding {
 			Thread t = new Thread(elevatorService, "Elevator " + i);
 			t.start();
 		}
-		this.maxOccupancy = maxOccupancy; 
+		this.maxOccupancy = maxOccupancy;
 	}
 
 	@Override

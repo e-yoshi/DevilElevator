@@ -5,7 +5,6 @@ import java.util.List;
 
 import util.EventFactory;
 
-
 public class SimpleEventExecutor {
 
 	private static final String FILENAME = "simpleBarrierEvent.csv";

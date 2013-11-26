@@ -49,8 +49,8 @@ public abstract class AbstractElevator {
 	public int getCurrentFloor() {
 		return currentFloor;
 	}
-	
+
 	public int getId() {
-	    return elevatorId;
+		return elevatorId;
 	}
 }

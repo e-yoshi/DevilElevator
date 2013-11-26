@@ -2,8 +2,8 @@ package elevator;
 
 import java.util.logging.Level;
 
-import api.AbstractElevator;
 import util.MessageLogger;
+import api.AbstractElevator;
 
 public class Passenger implements Runnable {
 	protected int id;
@@ -25,8 +25,8 @@ public class Passenger implements Runnable {
 	public void setBuilding(Building b) {
 		building = b;
 	}
-	
-	public int getID(){
+
+	public int getID() {
 		return id;
 	}
 
@@ -36,7 +36,7 @@ public class Passenger implements Runnable {
 		print("Calling Elevator!", Level.INFO);
 		elevator = requestElevator(destinationFloor);
 		waitForElevator(elevator);
-		while(!rideElevator(elevator)) {
+		while (!rideElevator(elevator)) {
 			elevator = requestElevator(destinationFloor);
 			waitForElevator(elevator);
 		}
@@ -91,7 +91,7 @@ public class Passenger implements Runnable {
 			elevator.Exit();
 			print("Exited! E:" + elevator.getId() + " F:" + elevator.getCurrentFloor(), Level.INFO);
 			return true;
-		}	
+		}
 	}
 
 	protected void print(String message, Level level) {

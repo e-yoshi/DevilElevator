@@ -38,8 +38,7 @@ public class ElevatorFactory implements ThreadFactory {
 	private void readFile(String fileName) {
 		// URL url = this.getClass().getResourceAsStream(FOLDER+fileName);
 		// File file = new File(url.getPath());
-		Reader reader = new InputStreamReader(this.getClass()
-				.getResourceAsStream(FOLDER + fileName));
+		Reader reader = new InputStreamReader(this.getClass().getResourceAsStream(FOLDER + fileName));
 
 		BufferedReader br = null;
 		String line = "";
@@ -67,16 +66,13 @@ public class ElevatorFactory implements ThreadFactory {
 				} else if (params[0].equals("jokers")) {
 					numJokers = Integer.parseInt(params[1]);
 				} else if (isPassenger(lineNum)) {
-//					System.out.println(params[0] + " "+ params[1]);
-					addPassenger(lineNum, Integer.parseInt(params[0]),
-							Integer.parseInt(params[1]));
+					// System.out.println(params[0] + " "+ params[1]);
+					addPassenger(lineNum, Integer.parseInt(params[0]), Integer.parseInt(params[1]));
 				} else if (isJoker(lineNum)) {
 					// public Joker(int id, int from, int dest, int wrongFloor,
 					// boolean waitElevator, boolean noRequest)
-					addJoker(lineNum, Integer.parseInt(params[0]),
-							Integer.parseInt(params[1]),
-							Integer.parseInt(params[2]),
-							Boolean.parseBoolean(params[3]),
+					addJoker(lineNum, Integer.parseInt(params[0]), Integer.parseInt(params[1]),
+							Integer.parseInt(params[2]), Boolean.parseBoolean(params[3]),
 							Boolean.parseBoolean(params[4]));
 				}
 
@@ -89,25 +85,21 @@ public class ElevatorFactory implements ThreadFactory {
 		} catch (IOException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
-			System.out
-					.println("An IO exeption ocurred while reading a line in the file.");
+			System.out.println("An IO exeption ocurred while reading a line in the file.");
 
 		}
 
 	}
 
-	private void addJoker(int lineNumber, int from, int to, int wrongFloor,
-			boolean wait, boolean request) {
+	private void addJoker(int lineNumber, int from, int to, int wrongFloor, boolean wait, boolean request) {
 		// public Joker(int id, int from, int dest, int wrongFloor, boolean
 		// waitElevator, boolean noRequest)
-		Joker j = new Joker(lineNumber - jokersIndex, from, to, wrongFloor,
-				wait, request);
-		//jokerList.add(j);
+		Joker j = new Joker(lineNumber - jokersIndex, from, to, wrongFloor, wait, request);
+		jokerList.add(j);
 	}
 
 	private boolean isJoker(int lineNumber) {
-		return (lineNumber > jokersIndex && lineNumber <= jokersIndex
-				+ numJokers);
+		return (lineNumber > jokersIndex && lineNumber <= jokersIndex + numJokers);
 	}
 
 	private void addRandomPassengers() {
@@ -139,8 +131,7 @@ public class ElevatorFactory implements ThreadFactory {
 	}
 
 	private boolean isPassenger(int lineNumber) {
-		return (!randPassengers && lineNumber > passIndex && lineNumber <= passIndex
-				+ numPassengers);
+		return (!randPassengers && lineNumber > passIndex && lineNumber <= passIndex + numPassengers);
 	}
 
 	@Override

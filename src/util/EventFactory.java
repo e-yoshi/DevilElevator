@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadFactory;
 
-import eventBarrier.Commuter;
-
 import api.AbstractEventBarrier;
+import eventBarrier.Commuter;
 
 public class EventFactory implements ThreadFactory {
 
